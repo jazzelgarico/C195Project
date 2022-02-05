@@ -147,6 +147,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Initialize?");
+        addDBCustomers();
         updateCustomerTable();
         System.out.println("Maybe?");
 
