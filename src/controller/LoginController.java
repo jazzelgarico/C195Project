@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,17 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import dbaccess.LoginValidator;
 
-public class LoginController implements Initializable {
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.print("Start");
-    }
+public class LoginController {
 
     @FXML
     private Button btnLogin;
@@ -50,15 +42,16 @@ public class LoginController implements Initializable {
      * @param event which triggers login attempt
      */
     public void btnLoginOnClick(ActionEvent event) {
-        Stage stage;
-        stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-        stage.close();
-
+        //Get Login Credentials
         String username = txtFldUserName.getText();
         String password = txtFldPassword.getText();
 
-        if (validateLogin(username,password)) {
+        if (LoginValidator.validateLogin(username, password)) {
             try {
+                Stage stage;
+                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                stage.close();
+
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/main-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setTitle("Welcome");
@@ -68,26 +61,7 @@ public class LoginController implements Initializable {
                 e.printStackTrace();
             }
         } else {
-            warnInvalidLogin();
+            lblUserWarning.setText("The username or password provided is incorrect.");
         }
-
     }
-
-    /**
-     * Label shows login warning regarding incorrect username or password.
-     */
-    public void warnInvalidLogin() {
-        lblUserWarning.setText("The username or password provided is not correct.");
-    }
-
-    /**
-     * Checks login credentials for valid username and password combination.
-     *
-     * @return true if login credentials are valid, false if login credentials are not valid
-     */
-    public boolean validateLogin(String username, String password) {
-        return true;
-    }
-
-
 }
