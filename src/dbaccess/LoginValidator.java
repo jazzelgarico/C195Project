@@ -14,7 +14,7 @@ public class LoginValidator {
      * @return true if login credentials are valid, false if login credentials are not valid
      */
     public static boolean validateLogin(String username,String password) {
-        boolean isLoginValid = false;
+        boolean isLoginValid = true;//CHANGE THIS
         try{
             String query = "SELECT * from users";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
@@ -26,7 +26,7 @@ public class LoginValidator {
                 isLoginValid = username.equals(myUser) && password.equals(myPassword);
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return true //CHANGE THIS;
+        return isLoginValid;
     }
 }
 

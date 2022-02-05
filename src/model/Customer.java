@@ -34,13 +34,15 @@ public class Customer {
      * @param postalCode postalCode to set
      * @param divisionId divisionId to set
      */
-    public Customer (int customerId, String customerName, String address, String postalCode, int divisionId) {
+    public Customer (int customerId, String customerName, String address, String postalCode, String phoneNumber, int divisionId) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.address = address;
         this.postalCode = postalCode;
+        this.phoneNumber = phoneNumber;
         this.divisionId = divisionId;
     }
+
 
     /**
      * Gets the customerId.

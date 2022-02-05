@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
     <Tab text="Customer">
          <content>
@@ -29,12 +29,11 @@
                      <children>
                         <TableView fx:id="tblViewCustomer" prefWidth="807.0">
                           <columns>
-                            <TableColumn prefWidth="88.0" text="Name" />
-                              <TableColumn prefWidth="137.0" text="Address" />
-                              <TableColumn prefWidth="98.0" text="Phone Number" />
-                              <TableColumn prefWidth="137.0" text="Postal Code" />
-                              <TableColumn prefWidth="128.0" text="First-Level Division" />
-                              <TableColumn prefWidth="209.0" text="Country" />
+                            <TableColumn fx:id="colCustomerName" prefWidth="88.0" text="Name" />
+                              <TableColumn fx:id="colAddress" prefWidth="137.0" text="Address" />
+                              <TableColumn fx:id="colPhoneNumber" prefWidth="98.0" text="Phone Number" />
+                              <TableColumn fx:id="colPostalCode" prefWidth="137.0" text="Postal Code" />
+                              <TableColumn fx:id="colFirstLevelDivision" prefWidth="128.0" text="First-Level Division" />
                           </columns>
                         </TableView>
                         <ButtonBar>
