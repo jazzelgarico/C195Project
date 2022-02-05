@@ -14,13 +14,10 @@ public class LoginValidator {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next() && !isLoginValid) {
                 String myUser = rs.getString("User_Name");
                 String myPassword = rs.getString("Password");
-                if (username.equals(myUser) && password.equals(myPassword)) {
-                    isLoginValid = true;
-                    break;
-                }
+                isLoginValid = username.equals(myUser) && password.equals(myPassword);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return isLoginValid;
