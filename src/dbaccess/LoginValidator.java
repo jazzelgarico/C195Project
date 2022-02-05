@@ -26,7 +26,7 @@ public class LoginValidator {
                 isLoginValid = username.equals(myUser) && password.equals(myPassword);
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return isLoginValid;
+        return true //CHANGE THIS;
     }
 }
 
