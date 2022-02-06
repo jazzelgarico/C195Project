@@ -9,17 +9,12 @@ import java.time.LocalTime;
  */
 
 public class Appointment {
-    //Types of Appointments for Organization
-    enum AppointmentType {
-        RETIREMENT, LIFEINSURANCE, ESTATEPLANNING, WEALTHMANAGEMENT
-    }
-
     private int appointmentId;
     private String title;
     private String description;
     private String location;
     private int contactId;
-    private AppointmentType type;
+    private String type;
     private LocalDate appointmentDate;
     private LocalTime startTime;
     private LocalTime endTime;
@@ -43,7 +38,7 @@ public class Appointment {
      * @param userId userId to set
      */
     public Appointment(int appointmentId, String title, String description, String location, int contactId,
-                       AppointmentType type, LocalDate appointmentDate, LocalTime startTime, LocalTime endTime,
+                       String type, LocalDate appointmentDate, LocalTime startTime, LocalTime endTime,
                        int customerId, int userId) {
         this.appointmentId = appointmentId;
         this.title = title;
@@ -153,7 +148,7 @@ public class Appointment {
      *
      * @return the type
      */
-    public AppointmentType getType() {
+    public String getType() {
         return type;
     }
 
@@ -162,7 +157,7 @@ public class Appointment {
      *
      * @param type type to set
      */
-    public void setType(AppointmentType type){
+    public void setType(String type){
         this.type = type;
     }
 

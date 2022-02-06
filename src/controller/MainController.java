@@ -1,10 +1,13 @@
 package controller;
 
+import dbaccess.addDBData;
 import dbconnection.DBConnection;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import model.Appointment;
+import model.AppointmentList;
 import model.Customer;
 import model.CustomerList;
 
@@ -12,6 +15,8 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -59,7 +64,40 @@ public class MainController implements Initializable {
     private RadioButton radioButtonWeek;
 
     @FXML
-    private TableView<?> tblViewAppointment;
+    private TableView<Appointment> tblViewAppointment;
+
+    @FXML
+    private TableColumn<Appointment, Integer> colAppID;
+
+    @FXML
+    private TableColumn<Appointment, String> colTitle;
+
+    @FXML
+    private TableColumn<Appointment, String> colDesc;
+
+    @FXML
+    private TableColumn<Appointment, String> colLocation;
+
+    @FXML
+    private TableColumn<Appointment, Integer> colContact;
+
+    @FXML
+    private TableColumn<Appointment, String> colType;
+
+    @FXML
+    private TableColumn<Appointment, LocalDate> colDate;
+
+    @FXML
+    private TableColumn<Appointment, LocalTime> colStart;
+
+    @FXML
+    private TableColumn<Appointment, LocalTime> colEnd;
+
+    @FXML
+    private TableColumn<Appointment, Integer> colCustomerId;
+
+    @FXML
+    private TableColumn<Appointment, Integer> colUserId;
 
     @FXML
     private TableView<Customer> tblViewCustomer;
@@ -78,7 +116,6 @@ public class MainController implements Initializable {
 
     @FXML
     private TableColumn<Customer, String> colPostalCode;
-
 
     @FXML
     private TextField txtFldAddress;
@@ -123,33 +160,32 @@ public class MainController implements Initializable {
         colFirstLevelDivision.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
     }
 
-    public static void addDBCustomers() {
-        try {
-            String query = "SELECT Customer_ID,Customer_Name,Address,Postal_Code,Phone,Division_ID FROM customers;";
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int customerID = rs.getInt("Customer_ID");
-                String customerName = rs.getString("Customer_Name");
-                String address = rs.getString("Address");
-                String postalCode = rs.getString("Postal_Code");
-                String phone = rs.getString("Phone");
-                int divisionID = rs.getInt("Division_ID");
-
-                Customer customer = new Customer(customerID,customerName,address,postalCode,phone,divisionID);
-                CustomerList.addCustomer(customer);
-            }
-
-        } catch (SQLException e) { e.printStackTrace(); }
+    private void updateAppointmentTable() {
+        tblViewAppointment.setItems(AppointmentList.getAppointmentList());
+        colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        colContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        colStart.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
     }
+
+
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Initialize?");
-        addDBCustomers();
+        addDBData.addDBCustomers();
+        addDBData.addDBAppointments();
         updateCustomerTable();
+        updateAppointmentTable();
         System.out.println("Maybe?");
 
     }
