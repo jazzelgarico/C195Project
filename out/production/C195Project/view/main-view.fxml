@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -97,8 +98,11 @@
                <children>
                   <HBox spacing="10.0">
                      <children>
-                        <RadioButton fx:id="radioBtnMonth" mnemonicParsing="false" text="This Month" />
-                        <RadioButton fx:id="radioButtonWeek" mnemonicParsing="false" text="This Week" />
+                        <RadioButton fx:id="radioBtnMonth" mnemonicParsing="false" selected="true" text="This Month">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="viewType" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="radioBtnWeek" mnemonicParsing="false" text="This Week" toggleGroup="$viewType" />
                      </children>
                   </HBox>
                   <TableView fx:id="tblViewAppointment" prefHeight="200.0" prefWidth="200.0">

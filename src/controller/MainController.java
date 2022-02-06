@@ -14,6 +14,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
+import javafx.util.Callback;
 
 public class MainController implements Initializable {
 
@@ -170,7 +171,7 @@ public class MainController implements Initializable {
         colContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
-        colStart.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        colStart.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
         colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
@@ -180,7 +181,7 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Initialize?");
         addDBData.addDBCustomers();
-        addDBData.addDBAppointments();
+        addDBData.AddAllAppointments();
         updateCustomerTable();
         updateAppointmentTable();
         System.out.println("Maybe?");

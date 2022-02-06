@@ -11,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 public class addDBData {
 
@@ -35,7 +39,64 @@ public class addDBData {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    public static void addDBAppointments() {
+    public static void AddAllAppointments() {
+        try {
+            String query = "SELECT Appointment_ID,Title,Description,Location,Type,Start,End,Customer_ID,User_ID," +
+                    "Contact_ID from appointments";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int appointmentId = rs.getInt("Appointment_ID");
+                String title = rs.getString("Title");
+                String description = rs.getString("Description");
+                String location = rs.getString("Location");
+                int contactId = rs.getInt("Contact_ID");
+                String type = rs.getString("Type");
+                LocalDate appointmentDate = rs.getTimestamp("Start").toLocalDateTime().toLocalDate();
+                ZonedDateTime startTime = rs.getTimestamp("Start").toLocalDateTime().atZone(TimeZone.getDefault().toZoneId());
+                ZonedDateTime endTime = rs.getTimestamp("End").toLocalDateTime().atZone(TimeZone.getDefault().toZoneId());
+                int customerId = rs.getInt("Customer_ID");
+                int userId = rs.getInt("User_ID");
+
+                Appointment appointment = new Appointment(appointmentId, title, description, location, contactId, type,
+                        appointmentDate, startTime, endTime, customerId, userId);
+                AppointmentList.addAppointment(appointment);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public static void AddThisMonthAppointments() {
+        try {
+            String query = "SELECT Appointment_ID,Title,Description,Location,Type,Start,End,Customer_ID,User_ID," +
+                    "Contact_ID from appointments";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int appointmentId = rs.getInt("Appointment_ID");
+                String title = rs.getString("Title");
+                String description = rs.getString("Description");
+                String location = rs.getString("Location");
+                int contactId = rs.getInt("Contact_ID");
+                String type = rs.getString("Type");
+                LocalDate appointmentDate = rs.getTimestamp("Start").toLocalDateTime().toLocalDate();
+                ZonedDateTime startTime = rs.getTimestamp("Start").toLocalDateTime().atZone(TimeZone.getDefault().toZoneId());
+                ZonedDateTime endTime = rs.getTimestamp("End").toLocalDateTime().atZone(TimeZone.getDefault().toZoneId());
+                int customerId = rs.getInt("Customer_ID");
+                int userId = rs.getInt("User_ID");
+
+                if (appointmentDate.getMonth() == LocalDate.now().getMonth()) {
+                    Appointment appointment = new Appointment(appointmentId, title, description, location, contactId, type,
+                            appointmentDate, startTime, endTime, customerId, userId);
+                    AppointmentList.addAppointment(appointment);
+                }
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    /**
+    public static void AddThisWeekAppointments() {
         try {
             String query = "SELECT Appointment_ID,Title,Description,Location,Type,Start,End,Customer_ID,User_ID," +
                     "Contact_ID from appointments";
@@ -55,10 +116,12 @@ public class addDBData {
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
 
-                Appointment appointment = new Appointment(appointmentId,title,description,location,contactId,type,
-                        appointmentDate,startTime,endTime,customerId,userId);
-                AppointmentList.addAppointment(appointment);
+                if (appointmentDate.getDayOfWeek() == LocalDate.now().getMonth()) {
+                    Appointment appointment = new Appointment(appointmentId, title, description, location, contactId, type,
+                            appointmentDate, startTime, endTime, customerId, userId);
+                    AppointmentList.addAppointment(appointment);
+                }
             }
         } catch (SQLException e) { e.printStackTrace(); }
-    }
+    }*/
 }
