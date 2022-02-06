@@ -1,7 +1,6 @@
 package controller;
 
 import dbaccess.addDBData;
-import dbconnection.DBConnection;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,9 +11,6 @@ import model.Customer;
 import model.CustomerList;
 
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
@@ -57,12 +53,17 @@ public class MainController implements Initializable {
     @FXML
     private ChoiceBox<?> comboType;
 
+    // Month/Week Toggle
+    @FXML
+    private ToggleGroup viewType;
+
     @FXML
     private RadioButton radioBtnMonth;
 
     @FXML
-    private RadioButton radioButtonWeek;
+    private RadioButton radioBtnWeek;
 
+    // Appointment TableView
     @FXML
     private TableView<Appointment> tblViewAppointment;
 
@@ -174,10 +175,6 @@ public class MainController implements Initializable {
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
     }
-
-
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
