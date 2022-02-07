@@ -2,17 +2,20 @@ package controller;
 
 import dbaccess.DBAccess;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import model.*;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class MainController implements Initializable {
 
@@ -122,10 +125,10 @@ public class MainController implements Initializable {
     private TableColumn<Appointment, LocalDate> colDate;
 
     @FXML
-    private TableColumn<Appointment, LocalTime> colStart;
+    private TableColumn<Appointment, LocalDateTime> colStart;
 
     @FXML
-    private TableColumn<Appointment, LocalTime> colEnd;
+    private TableColumn<Appointment, LocalDateTime> colEnd;
 
     @FXML
     private TableColumn<Appointment, Integer> colCustomerId;
@@ -139,10 +142,10 @@ public class MainController implements Initializable {
     private ComboBox<Contact> comboContact;
 
     @FXML
-    private ComboBox<?> comboEndTime;
+    private ComboBox<LocalTime> comboEndTime;
 
     @FXML
-    private ComboBox<?> comboStartTime;
+    private ComboBox<LocalTime> comboStartTime;
 
     @FXML
     private ChoiceBox<?> comboType;
@@ -181,6 +184,44 @@ public class MainController implements Initializable {
      * Updates Appointments Table View from Appointments in the database.
      */
     private void updateAppointmentTable() {
+        Callback<TableColumn<Appointment,LocalDate>,TableCell<Appointment,LocalDate>> dateFactory =
+                localDateTimeTableColumn -> new TableCell<Appointment,LocalDate>() {
+                    @Override
+                    protected void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item,empty);
+
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                            ZoneId orgZoneId = ZoneId.of("EST5EDT");
+                            ZonedDateTime orgZDT = ZonedDateTime.of(item,LocalTime.of(8,0),orgZoneId);
+                            ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
+                            setText(orgToLocal.format(DateTimeFormatter.ofPattern("M/d/yyyy")));
+                        }
+
+                    }
+                };
+
+        Callback<TableColumn<Appointment,LocalDateTime>,TableCell<Appointment,LocalDateTime>> timeFactory =
+                localDateTimeTableColumn -> new TableCell<Appointment,LocalDateTime>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item,empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                    ZoneId orgZoneId = ZoneId.of("EST5EDT");
+                    ZonedDateTime orgZDT = ZonedDateTime.of(item,orgZoneId);
+                    ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
+                    setText(orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
+                }
+
+            }
+        };
+
         tblViewAppointment.setItems(DBAccess.addAllAppointments());
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -189,8 +230,11 @@ public class MainController implements Initializable {
         colContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        colDate.setCellFactory(dateFactory);
         colStart.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        colEnd.setCellFactory(timeFactory);
+        colStart.setCellFactory(timeFactory);
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
     }
@@ -363,5 +407,43 @@ public class MainController implements Initializable {
         updateAppointmentTable();
         comboCountry.setItems(DBAccess.getCountries());
         comboContact.setItems(DBAccess.getAllContacts());
+        LocalTime start = LocalTime.of(8,0);
+        LocalTime end = LocalTime.of(22,0);
+
+
+
+        Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item,empty);
+                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                ZoneId orgZoneId = ZoneId.of("EST5EDT");
+                ZonedDateTime orgZDT = ZonedDateTime.of(item,orgZoneId);
+                ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
+                setText(empty ? "" : orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
+            }
+        };
+
+        while (start.isBefore(end)){
+            comboStartTime.getItems().add(start);
+            start = start.plusMinutes(15);
+        }
+
+
+        /*
+        comboStartTime.setCellFactory(factory);
+        start = LocalTime.of(8,30);
+        end = LocalTime.of(22,0);
+
+        while (start.isBefore(end.plusSeconds(1))){
+            comboEndTime.getItems().add(start);
+            start = start.plusMinutes(15);
+        }
+        comboStartTime.setCellFactory(factory);
+        comboStartTime.setButtonCell(factory.call(null));
+        comboEndTime.setCellFactory(factory);
+        comboEndTime.setButtonCell(factory.call(null));
+        */
+
     }
 }
