@@ -3,6 +3,7 @@ package dbaccess;
 import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import model.Appointment;
 import model.Country;
 import model.Customer;
@@ -161,6 +162,7 @@ public class DBAccess {
             String query = "SELECT Division,Country_ID FROM first_level_divisions WHERE Division_ID="+divisionId+";";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
+
             rs.next();
             String name = rs.getString("Division");
             int countryId = rs.getInt("Country_ID");
@@ -183,6 +185,28 @@ public class DBAccess {
             country = new Country(countryId,name);
         } catch (SQLException e) { e.printStackTrace(); }
         return country;
+    }
+
+    public static void editCustomer(Customer customer) {
+        int id = customer.getCustomerId();
+        String query = "UPDATE customers SET Customer_Name=?, Address=?,Postal_Code=?,Phone=?,Last_Update=NOW(),"
+                +"Last_Updated_By='user',Division_ID=? WHERE Customer_ID="+id+";";
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+
+            ps.setString(1,customer.getCustomerName());
+            ps.setString(2,customer.getAddress());
+            ps.setString(3, customer.getPostalCode());
+            ps.setString(4, customer.getPhoneNumber());
+            ps.setInt(5,customer.getDivisionId());
+
+            Boolean updateSuccess = ps.execute();
+            if (updateSuccess) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Update successful.");
+                alert.setContentText("Customer with ID number "+id+" has been updated.");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
     }
 
 }
