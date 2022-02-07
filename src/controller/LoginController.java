@@ -1,5 +1,6 @@
 package controller;
 
+import dbaccess.DBAccess;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import dbaccess.LoginValidator;
 
 public class LoginController implements Initializable{
 
@@ -51,7 +50,7 @@ public class LoginController implements Initializable{
         String username = txtFldUserName.getText();
         String password = txtFldPassword.getText();
 
-        if (LoginValidator.validateLogin(username, password)) {
+        if (DBAccess.validateLogin(username, password)) {
             try {
                 Stage stage;
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();

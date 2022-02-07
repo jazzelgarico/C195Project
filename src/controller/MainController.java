@@ -1,6 +1,6 @@
 package controller;
 
-import dbaccess.ReadDB;
+import dbaccess.DBAccess;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -154,7 +154,7 @@ public class MainController implements Initializable {
 
 
     private void updateCustomerTable() {
-        tblViewCustomer.setItems(ReadDB.addDBCustomers());
+        tblViewCustomer.setItems(DBAccess.addDBCustomers());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -163,7 +163,7 @@ public class MainController implements Initializable {
     }
 
     private void updateAppointmentTable() {
-        tblViewAppointment.setItems(ReadDB.addAllAppointments());
+        tblViewAppointment.setItems(DBAccess.addAllAppointments());
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -181,7 +181,7 @@ public class MainController implements Initializable {
     @FXML
     void onActionCustomerDelete(ActionEvent event) {
         int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
-        ReadDB.deleteCustomer(customerId);
+        DBAccess.deleteCustomer(customerId);
         updateCustomerTable();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Deletion successful.");
@@ -204,7 +204,7 @@ public class MainController implements Initializable {
         int divisionID = 1; //FIX ME
 
         Customer customer = new Customer(customerID,customerName,address,postalCode,phoneNumber,divisionID);
-        ReadDB.addCustomer(customer);
+        DBAccess.addCustomer(customer);
         updateCustomerTable();
 
     }

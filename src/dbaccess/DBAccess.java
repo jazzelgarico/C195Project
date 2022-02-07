@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReadDB {
+public class DBAccess {
 
     public static ObservableList<Customer> addDBCustomers() {
         ObservableList<Customer> list = FXCollections.observableArrayList();
@@ -93,5 +93,28 @@ public class ReadDB {
             ps.setInt(5,divisionId);
             ps.execute();
         } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    /**
+     * Validates login credentials given by the user.
+     *
+     * @param username the username provided
+     * @param password the password provided
+     * @return true if login credentials are valid, false if login credentials are not valid
+     */
+    public static boolean validateLogin(String username,String password) {
+        boolean isLoginValid = true;//CHANGE THIS
+        try{
+            String query = "SELECT * from users";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next() && !isLoginValid) {
+                String myUser = rs.getString("User_Name");
+                String myPassword = rs.getString("Password");
+                isLoginValid = username.equals(myUser) && password.equals(myPassword);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return isLoginValid;
     }
 }
