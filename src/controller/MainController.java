@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.Country;
 import model.Customer;
+import model.FirstLevelDivision;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public class MainController implements Initializable {
     private ComboBox<?> comboEndTime;
 
     @FXML
-    private ComboBox<?> comboFirstLevelDiv;
+    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
 
     @FXML
     private ComboBox<?> comboStartTime;
@@ -209,7 +210,14 @@ public class MainController implements Initializable {
         updateCustomerTable();
     }
 
-    @Override
+    @FXML
+    void onActionComboCountry(ActionEvent event) {
+        Country country = comboCountry.getSelectionModel().getSelectedItem();
+        comboFirstLevelDiv.setItems(DBAccess.getFirstLevelDivision(country.getCountryId()));
+    }
+
+
+        @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateCustomerTable();
         updateAppointmentTable();

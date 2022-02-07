@@ -74,7 +74,7 @@
                                     <TextField fx:id="txtFldPostalCode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <TextField fx:id="txtFldPhoneNumber" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <ComboBox fx:id="comboFirstLevelDiv" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <ComboBox fx:id="comboCountry" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <ComboBox fx:id="comboCountry" onAction="#onActionComboCountry" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                               <ButtonBar>

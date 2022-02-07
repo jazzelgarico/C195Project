@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import model.Appointment;
 import model.Country;
 import model.Customer;
+import model.FirstLevelDivision;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -131,6 +133,23 @@ public class DBAccess {
                 String countryName = rs.getString("Country");
                 Country country = new Country(countryId,countryName);
                 list.add(country);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public static ObservableList<FirstLevelDivision> getFirstLevelDivision(int countryId) {
+        ObservableList<FirstLevelDivision> list = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT Division_ID,Division FROM first_level_divisions WHERE Country_ID ="+countryId+";";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int divisionId = rs.getInt("Division_ID");
+                String name = rs.getString("Division");
+                FirstLevelDivision division = new FirstLevelDivision(divisionId, name, countryId);
+                list.add(division);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;

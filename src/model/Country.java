@@ -15,6 +15,15 @@ public class Country {
         this.country = country;
     }
 
+    /**
+     * Gets the countryId
+     *
+     * @return the countryId
+     */
+    public int getCountryId(){
+        return countryId;
+    }
+
     @Override
     public String toString() {
         return country;
