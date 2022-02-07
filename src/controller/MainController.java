@@ -2,12 +2,14 @@ package controller;
 
 import dbaccess.DBAccess;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
+import model.Country;
 import model.Customer;
 
 import java.net.URL;
@@ -39,7 +41,7 @@ public class MainController implements Initializable {
     private ComboBox<?> comboContact;
 
     @FXML
-    private ComboBox<?> comboCountry;
+    private ComboBox<Country> comboCountry;
 
     @FXML
     private ComboBox<?> comboEndTime;
@@ -211,6 +213,6 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateCustomerTable();
         updateAppointmentTable();
-
+        comboCountry.setItems(DBAccess.getCountries());
     }
 }

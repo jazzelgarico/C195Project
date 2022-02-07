@@ -4,6 +4,7 @@ import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointment;
+import model.Country;
 import model.Customer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -116,5 +117,22 @@ public class DBAccess {
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return isLoginValid;
+    }
+
+    public static ObservableList<Country> getCountries() {
+        ObservableList<Country> list = FXCollections.observableArrayList();
+        try {
+            String query = "SELECT Country_ID,Country FROM countries;";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int countryId = rs.getInt("Country_ID");
+                String countryName = rs.getString("Country");
+                Country country = new Country(countryId,countryName);
+                list.add(country);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
     }
 }
