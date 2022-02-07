@@ -203,7 +203,7 @@ public class MainController implements Initializable {
         String address = txtFldAddress.getText();
         String postalCode = txtFldPostalCode.getText();
         String phoneNumber = txtFldPhoneNumber.getText();
-        int divisionID = 1; //FIX ME
+        int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId(); //FIX ME
 
         Customer customer = new Customer(0,customerName,address,postalCode,phoneNumber,divisionID);
         DBAccess.addCustomer(customer);

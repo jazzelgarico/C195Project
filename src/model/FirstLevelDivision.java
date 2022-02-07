@@ -18,6 +18,9 @@ public class FirstLevelDivision {
         this.countryId = countryId;
     }
 
+    public int getDivisionId() {
+        return divisionId;
+    }
     @Override
     public String toString() {
         return division;
