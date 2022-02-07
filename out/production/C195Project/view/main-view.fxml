@@ -38,7 +38,7 @@
                         </TableView>
                         <ButtonBar>
                            <buttons>
-                              <Button fx:id="btnEditCustomer" mnemonicParsing="false" onMouseClicked="#onMouseClickEditCustomer" text="Edit" />
+                              <Button fx:id="btnEditCustomer" mnemonicParsing="false" text="Edit" />
                               <Button fx:id="btnDeleteCustomer" mnemonicParsing="false" onAction="#onActionCustomerDelete" text="Delete" />
                               <Button mnemonicParsing="false" text="Create Appointment" />
                            </buttons>
@@ -82,7 +82,7 @@
                               </GridPane>
                               <ButtonBar>
                                  <buttons>
-                                    <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Save" />
+                                    <Button fx:id="btnSaveCustomer" mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Save" />
                                  </buttons>
                               </ButtonBar>
                            </children>
@@ -95,7 +95,7 @@
                </padding>
             </HBox>
          </content></Tab>
-    <Tab text="Appointment">
+    <Tab fx:id="tabAppointment" text="Appointment">
          <content>
             <VBox spacing="10.0">
                <children>

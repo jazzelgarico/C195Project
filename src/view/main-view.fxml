@@ -38,7 +38,7 @@
                         </TableView>
                         <ButtonBar>
                            <buttons>
-                              <Button fx:id="btnEditCustomer" mnemonicParsing="false" onMouseClicked="#onMouseClickEditCustomer" text="Edit" />
+                              <Button fx:id="btnEditCustomer" mnemonicParsing="false" text="Edit" />
                               <Button fx:id="btnDeleteCustomer" mnemonicParsing="false" onAction="#onActionCustomerDelete" text="Delete" />
                               <Button mnemonicParsing="false" text="Create Appointment" />
                            </buttons>
