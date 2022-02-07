@@ -43,6 +43,22 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
+    /**
+     * Constructor for Customer with no customerId
+     *
+     * @param customerName customerName to set
+     * @param address address to set
+     * @param postalCode postalCode to set
+     * @param divisionId divisionId to set
+     */
+    public Customer (String customerName, String address, String postalCode, String phoneNumber, int divisionId) {
+        customerId = 0;
+        this.customerName = customerName;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phoneNumber = phoneNumber;
+        this.divisionId = divisionId;
+    }
 
     /**
      * Gets the customerId.
