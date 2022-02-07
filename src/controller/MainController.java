@@ -2,21 +2,15 @@ package controller;
 
 import dbaccess.DBAccess;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import model.Appointment;
 import model.Country;
 import model.Customer;
 import model.FirstLevelDivision;
-
-import javax.swing.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,14 +18,11 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    @FXML
-    private Button btnDeleteAppointment;
+    // Customer Tab
 
+    // Customer Tab Buttons
     @FXML
     private Button btnDeleteCustomer;
-
-    @FXML
-    private Button btnEditAppointment;
 
     @FXML
     private Button btnEditCustomer;
@@ -39,21 +30,49 @@ public class MainController implements Initializable {
     @FXML
     private Button btnSave;
 
+    // Table View Customer
     @FXML
-    private Button btnSaveAppointment;
+    private TableView<Customer> tblViewCustomer;
 
     @FXML
-    private ComboBox<?> comboContact;
+    private TableColumn<Customer, String> colAddress;
 
     @FXML
-    private ComboBox<?> comboEndTime;
-
-
-    @FXML
-    private ComboBox<?> comboStartTime;
+    private TableColumn<Customer, String> colCustomerName;
 
     @FXML
-    private ChoiceBox<?> comboType;
+    private TableColumn<Customer, Integer> colFirstLevelDivision;
+
+    @FXML
+    private TableColumn<Customer, String> colPhoneNumber;
+
+    @FXML
+    private TableColumn<Customer, String> colPostalCode;
+
+    // Customer Form
+
+    @FXML
+    private TextField txtFldCustomerIDCustomer;
+
+    @FXML
+    private TextField txtFldName;
+
+    @FXML
+    private TextField txtFldAddress;
+
+    @FXML
+    private TextField txtFldPhoneNumber;
+
+    @FXML
+    private TextField txtFldPostalCode;
+
+    @FXML
+    private ComboBox<Country> comboCountry;
+
+    @FXML
+    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
+
+    // Appointment Tab
 
     // Month/Week Toggle
     @FXML
@@ -64,6 +83,17 @@ public class MainController implements Initializable {
 
     @FXML
     private RadioButton radioBtnWeek;
+
+    // Appointment Tab Buttons
+
+    @FXML
+    private Button btnDeleteAppointment;
+
+    @FXML
+    private Button btnEditAppointment;
+
+    @FXML
+    private Button btnSaveAppointment;
 
     // TableView Appointment
     @FXML
@@ -102,48 +132,19 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Appointment, Integer> colUserId;
 
-    //Table View Customer
-    @FXML
-    private TableView<Customer> tblViewCustomer;
+    // Appointment Form
 
     @FXML
-    private TableColumn<Customer, String> colAddress;
+    private ComboBox<?> comboContact;
 
     @FXML
-    private TableColumn<Customer, String> colCustomerName;
+    private ComboBox<?> comboEndTime;
 
     @FXML
-    private TableColumn<Customer, Integer> colFirstLevelDivision;
+    private ComboBox<?> comboStartTime;
 
     @FXML
-    private TableColumn<Customer, String> colPhoneNumber;
-
-    @FXML
-    private TableColumn<Customer, String> colPostalCode;
-
-    //Customer Form
-
-    @FXML
-    private TextField txtFldCustomerIDCustomer;
-
-    @FXML
-    private TextField txtFldName;
-
-    @FXML
-    private TextField txtFldAddress;
-
-    @FXML
-    private TextField txtFldPhoneNumber;
-
-    @FXML
-    private TextField txtFldPostalCode;
-
-    @FXML
-    private ComboBox<Country> comboCountry;
-
-    @FXML
-    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
-
+    private ChoiceBox<?> comboType;
 
     @FXML
     private TextField txtFldAppID;
@@ -296,12 +297,13 @@ public class MainController implements Initializable {
     /**
      * Gets the selected country from the combo box and fills in the first-divisions combo box with the first-level
      * divisions associated with the selected country.
+     * <p>
+     * onActionSaveCustomer triggers error during comboCountry.setValue(null) so must check if selection is empty
      *
      * @param event the event object which triggers selection in country combo box
      */
     @FXML
     void onActionComboCountry(ActionEvent event) {
-        //onActionSaveCustomer triggers error during comboCountry.setValue(null) so must check if selection is empty
         if (!comboCountry.getSelectionModel().isEmpty()) {
             Country country = comboCountry.getSelectionModel().getSelectedItem();
             comboFirstLevelDiv.setItems(DBAccess.getFirstLevelDivision(country.getCountryId()));
