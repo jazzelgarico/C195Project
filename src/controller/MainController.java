@@ -194,7 +194,21 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionCustomerEdit(ActionEvent event) {
+        Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
+        String name = customer.getCustomerName();
+        String address = customer.getAddress();
+        String phone = customer.getPhoneNumber();
+        String postalCode = customer.getPostalCode();
+        int divisionId = customer.getDivisionId();
+        FirstLevelDivision division = DBAccess.getFirstLevelDivisionByID(divisionId);
+        Country country = DBAccess.getCountryByID(division.getCountryId());
 
+        txtFldName.setText(name);
+        txtFldAddress.setText(address);
+        txtFldPhoneNumber.setText(phone);
+        txtFldPostalCode.setText(postalCode);
+        comboFirstLevelDiv.setValue(division);
+        comboCountry.setValue(country);
     }
 
     @FXML
@@ -203,7 +217,7 @@ public class MainController implements Initializable {
         String address = txtFldAddress.getText();
         String postalCode = txtFldPostalCode.getText();
         String phoneNumber = txtFldPhoneNumber.getText();
-        int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId(); //FIX ME
+        int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId();
 
         Customer customer = new Customer(0,customerName,address,postalCode,phoneNumber,divisionID);
         DBAccess.addCustomer(customer);

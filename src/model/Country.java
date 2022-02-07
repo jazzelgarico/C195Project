@@ -5,6 +5,14 @@ public class Country {
     private String country;
 
     /**
+     * No-arg constructor for Country
+     */
+    public Country() {
+        countryId = 0;
+        country = "";
+    }
+
+    /**
      * Constructor for Country
      *
      * @param countryId countryId to set

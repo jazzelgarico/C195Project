@@ -6,6 +6,15 @@ public class FirstLevelDivision {
     private int countryId;
 
     /**
+     * No-arg Constructor for FirstLevelDivision
+     */
+    public FirstLevelDivision() {
+        divisionId = 0;
+        division = "";
+        countryId = 0;
+    }
+
+    /**
      * Constructor for FirstLevelDivision
      *
      * @param divisionId divisionId to set
@@ -20,6 +29,10 @@ public class FirstLevelDivision {
 
     public int getDivisionId() {
         return divisionId;
+    }
+
+    public int getCountryId() {
+        return countryId;
     }
     @Override
     public String toString() {

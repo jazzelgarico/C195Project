@@ -155,4 +155,34 @@ public class DBAccess {
         return list;
     }
 
+    public static FirstLevelDivision getFirstLevelDivisionByID(int divisionId) {
+        FirstLevelDivision division = new FirstLevelDivision();
+        try {
+            String query = "SELECT Division,Country_ID FROM first_level_divisions WHERE Division_ID="+divisionId+";";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            String name = rs.getString("Division");
+            int countryId = rs.getInt("Country_ID");
+
+            division = new FirstLevelDivision(divisionId,name,countryId);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return division;
+    }
+
+    public static Country getCountryByID(int countryID) {
+        Country country = new Country();
+        try {
+            String query = "SELECT Country,Country_ID FROM countries WHERE Country_ID="+countryID+";";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int countryId = rs.getInt("Country_ID");
+            String name = rs.getString("Country");
+
+            country = new Country(countryId,name);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return country;
+    }
+
 }
