@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1080.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
     <Tab text="Customer">
          <content>
@@ -29,11 +29,11 @@
                      <children>
                         <TableView fx:id="tblViewCustomer" prefWidth="807.0">
                           <columns>
-                            <TableColumn fx:id="colCustomerName" prefWidth="88.0" text="Name" />
-                              <TableColumn fx:id="colAddress" prefWidth="137.0" text="Address" />
-                              <TableColumn fx:id="colPhoneNumber" prefWidth="98.0" text="Phone Number" />
-                              <TableColumn fx:id="colPostalCode" prefWidth="137.0" text="Postal Code" />
-                              <TableColumn fx:id="colFirstLevelDivision" prefWidth="128.0" text="First-Level Division" />
+                            <TableColumn fx:id="colCustomerName" prefWidth="150.0" text="Name" />
+                              <TableColumn fx:id="colAddress" prefWidth="150.0" text="Address" />
+                              <TableColumn fx:id="colPhoneNumber" prefWidth="100.0" text="Phone Number" />
+                              <TableColumn fx:id="colPostalCode" prefWidth="125.0" text="Postal Code" />
+                              <TableColumn fx:id="colFirstLevelDivision" prefWidth="125.0" text="First-Level Division" />
                           </columns>
                         </TableView>
                         <ButtonBar>
@@ -110,17 +110,17 @@
                   </HBox>
                   <TableView fx:id="tblViewAppointment" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="colAppID" prefWidth="101.0" text="Appointment ID" />
-                      <TableColumn fx:id="colTitle" prefWidth="106.0" text="Title" />
-                        <TableColumn fx:id="colDesc" prefWidth="97.0" text="Description" />
-                        <TableColumn fx:id="colLocation" minWidth="0.0" prefWidth="148.0" text="Location" />
+                      <TableColumn fx:id="colAppID" prefWidth="100.0" text="Appointment ID" />
+                      <TableColumn fx:id="colTitle" prefWidth="100.0" text="Title" />
+                        <TableColumn fx:id="colDesc" prefWidth="100.0" text="Description" />
+                        <TableColumn fx:id="colLocation" minWidth="0.0" prefWidth="75.0" text="Location" />
                         <TableColumn fx:id="colContact" prefWidth="101.0" text="Contact" />
-                        <TableColumn fx:id="colType" prefWidth="78.0" text="Type" />
-                        <TableColumn fx:id="colDate" prefWidth="116.0" text="Date" />
-                        <TableColumn fx:id="colStart" prefWidth="88.0" text="Start Time" />
-                        <TableColumn fx:id="colEnd" minWidth="0.0" prefWidth="98.0" text="End Time" />
-                        <TableColumn fx:id="colCustomerId" prefWidth="125.0" text="Customer ID" />
-                        <TableColumn fx:id="colUserId" prefWidth="156.0" text="User ID" />
+                        <TableColumn fx:id="colType" prefWidth="100.0" text="Type" />
+                        <TableColumn fx:id="colDate" prefWidth="100.0" text="Date" />
+                        <TableColumn fx:id="colStart" prefWidth="100.0" text="Start Time" />
+                        <TableColumn fx:id="colEnd" minWidth="0.0" prefWidth="100.0" text="End Time" />
+                        <TableColumn fx:id="colCustomerId" prefWidth="100.0" text="Customer ID" />
+                        <TableColumn fx:id="colUserId" prefWidth="50.0" text="User ID" />
                     </columns>
                   </TableView>
                   <ButtonBar>
