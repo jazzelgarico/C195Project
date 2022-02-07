@@ -7,10 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Appointment;
-import model.Country;
-import model.Customer;
-import model.FirstLevelDivision;
+import model.*;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -138,7 +136,7 @@ public class MainController implements Initializable {
     // Appointment Form
 
     @FXML
-    private ComboBox<?> comboContact;
+    private ComboBox<Contact> comboContact;
 
     @FXML
     private ComboBox<?> comboEndTime;
@@ -326,7 +324,28 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionEditAppointment(ActionEvent event) {
+        //Get Appointment Data
+        Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
+        txtFldAppID.setText(Integer.toString(appointment.getAppointmentId()));
+        txtFldTitle.setText(appointment.getTitle());
+        txtFldDesc.setText(appointment.getDescription());
+        txtFldLocation.setText(appointment.getLocation());
 
+        /**
+        if (txtFldCustomerIDCustomer.getText().isEmpty()) {
+            //Adds new customer
+            Customer customer = new Customer(customerName, address, postalCode, phoneNumber, divisionID);
+            DBAccess.addCustomer(customer);
+        } else {
+            //Edits existing customer
+            int customerId = Integer.parseInt(txtFldCustomerIDCustomer.getText());
+            Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
+            DBAccess.editCustomer(customer);
+        }
+
+        updateCustomerTable();
+        clearCustomerForm();
+         */
     }
 
     @FXML
