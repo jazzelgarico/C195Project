@@ -163,7 +163,9 @@ public class MainController implements Initializable {
     @FXML
     private TextField txtFldUserID;
 
-
+    /**
+     * Updates Customer Table View from Customers in the database.
+     */
     private void updateCustomerTable() {
         tblViewCustomer.setItems(DBAccess.addDBCustomers());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
@@ -173,6 +175,9 @@ public class MainController implements Initializable {
         colFirstLevelDivision.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
     }
 
+    /**
+     * Updates Appointments Table View from Appointments in the database.
+     */
     private void updateAppointmentTable() {
         tblViewAppointment.setItems(DBAccess.addAllAppointments());
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
@@ -188,7 +193,12 @@ public class MainController implements Initializable {
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
     }
 
-
+    /**
+     * Deletes selected customer in Customer TableView from the database. After Customer is deleted, Customer Table
+     * View is refreshed. Informs user that deletion is successful with an alert.
+     *
+     * @param event the event which triggers customer to be deleted
+     */
     @FXML
     void onActionCustomerDelete(ActionEvent event) {
         int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
@@ -200,6 +210,11 @@ public class MainController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Fills in Customer form with the information of the selected Customer in the Customer Table View.
+     *
+     * @param event the event which triggers customer to be edited
+     */
     @FXML
     void onActionEditCustomer(ActionEvent event) {
         System.out.println(event.getEventType().toString());
@@ -223,6 +238,16 @@ public class MainController implements Initializable {
 
     }
 
+    /**
+     * Edits or creates a new customer.
+     * <p></p>
+     * If the customerId text field is filled in, updates the customer in the database
+     * with the given customerId from the contents of the Customer Form text fields. If the customerID text filled is
+     * empty, creates a new customer in the database. After customer is updated or added, updates the Customer Table
+     * View and clears the Customer Form.
+     *
+     * @param event the event object which triggers customer to be saved
+     */
     @FXML
     void onActionSaveCustomer(ActionEvent event) {
         //Get Form Data
@@ -239,26 +264,41 @@ public class MainController implements Initializable {
             int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId();
 
             if (txtFldCustomerIDCustomer.getText().isEmpty()) {
+                //Adds new customer
                 Customer customer = new Customer(customerName, address, postalCode, phoneNumber, divisionID);
                 DBAccess.addCustomer(customer);
             } else {
+                //Edits existing customer
                 int customerId = Integer.parseInt(txtFldCustomerIDCustomer.getText());
                 Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
                 DBAccess.editCustomer(customer);
             }
 
             updateCustomerTable();
-            //Clear Customer Form
-            txtFldCustomerIDCustomer.clear();
-            txtFldName.clear();
-            txtFldAddress.clear();
-            txtFldPostalCode.clear();
-            txtFldPhoneNumber.clear();
-            comboFirstLevelDiv.setValue(null);
-            comboCountry.setValue(null);
+            clearCustomerForm();
         }
     }
 
+    /**
+     * Clears the Customer Form fields. The customer form fields include txtFldCustomerIDCustomer, txtFldName,
+     * txtFldAddress, txtFldPostalCode, txtFldPhoneNumber,comboFirstLevelDiv, and comboCountry.
+     */
+    public void clearCustomerForm() {
+        txtFldCustomerIDCustomer.clear();
+        txtFldName.clear();
+        txtFldAddress.clear();
+        txtFldPostalCode.clear();
+        txtFldPhoneNumber.clear();
+        comboFirstLevelDiv.setValue(null);
+        comboCountry.setValue(null);
+    }
+
+    /**
+     * Gets the selected country from the combo box and fills in the first-divisions combo box with the first-level
+     * divisions associated with the selected country.
+     *
+     * @param event the event object which triggers selection in country combo box
+     */
     @FXML
     void onActionComboCountry(ActionEvent event) {
         //onActionSaveCustomer triggers error during comboCountry.setValue(null) so must check if selection is empty
@@ -268,6 +308,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * On initialize, updates Customer TableView, Appointment TableView, and country combo box
+     *
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateCustomerTable();
