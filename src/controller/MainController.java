@@ -1,20 +1,19 @@
 package controller;
 
-import dbaccess.addDBData;
+import dbaccess.ReadDB;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
-import model.AppointmentList;
 import model.Customer;
-import model.CustomerList;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
-import javafx.util.Callback;
 
 public class MainController implements Initializable {
 
@@ -64,7 +63,7 @@ public class MainController implements Initializable {
     @FXML
     private RadioButton radioBtnWeek;
 
-    // Appointment TableView
+    // TableView Appointment
     @FXML
     private TableView<Appointment> tblViewAppointment;
 
@@ -101,6 +100,7 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Appointment, Integer> colUserId;
 
+    //Table View Customer
     @FXML
     private TableView<Customer> tblViewCustomer;
 
@@ -154,7 +154,7 @@ public class MainController implements Initializable {
 
 
     private void updateCustomerTable() {
-        tblViewCustomer.setItems(CustomerList.getCustomerList());
+        tblViewCustomer.setItems(ReadDB.addDBCustomers());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -163,7 +163,7 @@ public class MainController implements Initializable {
     }
 
     private void updateAppointmentTable() {
-        tblViewAppointment.setItems(AppointmentList.getAppointmentList());
+        tblViewAppointment.setItems(ReadDB.addAllAppointments());
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -171,20 +171,47 @@ public class MainController implements Initializable {
         colContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
-        colStart.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        colStart.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
     }
 
+
+    @FXML
+    void onActionCustomerDelete(ActionEvent event) {
+        int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
+        ReadDB.deleteCustomer(customerId);
+        updateCustomerTable();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Deletion successful.");
+        alert.setContentText("Customer with ID number "+ customerId+" has been deleted.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    void onActionCustomerEdit(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionSaveCustomer(ActionEvent event) {
+        int customerID = 0;
+        String customerName = txtFldName.getText();
+        String address = txtFldAddress.getText();
+        String postalCode = txtFldPostalCode.getText();
+        String phoneNumber = txtFldPhoneNumber.getText();
+        int divisionID = 1; //FIX ME
+
+        Customer customer = new Customer(customerID,customerName,address,postalCode,phoneNumber,divisionID);
+        ReadDB.addCustomer(customer);
+        updateCustomerTable();
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Initialize?");
-        addDBData.addDBCustomers();
-        addDBData.AddAllAppointments();
         updateCustomerTable();
         updateAppointmentTable();
-        System.out.println("Maybe?");
-
     }
 }

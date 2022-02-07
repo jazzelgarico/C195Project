@@ -2,12 +2,6 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
-
-/**
- *
- * @author Jazzme Nadine N. Elgarico
- */
 
 public class Appointment {
     private int appointmentId;
@@ -17,11 +11,10 @@ public class Appointment {
     private int contactId;
     private String type;
     private LocalDate appointmentDate;
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private int customerId;
     private int userId;
-
 
     /**
      * Constructor for Appointment
@@ -39,7 +32,7 @@ public class Appointment {
      * @param userId userId to set
      */
     public Appointment(int appointmentId, String title, String description, String location, int contactId,
-                       String type, LocalDate appointmentDate, ZonedDateTime startTime, ZonedDateTime endTime,
+                       String type, LocalDate appointmentDate, LocalTime startTime, LocalTime endTime,
                        int customerId, int userId) {
         this.appointmentId = appointmentId;
         this.title = title;
@@ -185,7 +178,7 @@ public class Appointment {
      * 
      * @return the startTime
      */
-    public ZonedDateTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
@@ -194,7 +187,7 @@ public class Appointment {
      * 
      * @param startTime startTime to set
      */
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
@@ -203,7 +196,7 @@ public class Appointment {
      *
      * @return the endTime
      */
-    public ZonedDateTime getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
@@ -212,7 +205,7 @@ public class Appointment {
      *
      * @param endTime endTime to set
      */
-    public void setEndTime(ZonedDateTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 

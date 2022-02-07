@@ -12,11 +12,12 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import dbaccess.LoginValidator;
 
-public class LoginController {
+public class LoginController implements Initializable{
 
     @FXML
     private Button btnLogin;
@@ -69,4 +70,8 @@ public class LoginController {
         }
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        lblRegion.setText("Region: "+ Locale.getDefault());
+    }
 }
