@@ -95,7 +95,7 @@
                </padding>
             </HBox>
          </content></Tab>
-    <Tab text="Appointment">
+    <Tab fx:id="tabAppointment" text="Appointment">
          <content>
             <VBox spacing="10.0">
                <children>

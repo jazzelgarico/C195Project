@@ -74,6 +74,9 @@ public class MainController implements Initializable {
 
     // Appointment Tab
 
+    @FXML
+    private Tab tabAppointment;
+
     // Month/Week Toggle
     @FXML
     private ToggleGroup viewType;
