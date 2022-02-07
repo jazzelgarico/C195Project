@@ -28,7 +28,7 @@ public class MainController implements Initializable {
     private Button btnEditCustomer;
 
     @FXML
-    private Button btnSave;
+    private Button btnSaveCustomer;
 
     // Table View Customer
     @FXML

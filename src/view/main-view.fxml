@@ -82,7 +82,7 @@
                               </GridPane>
                               <ButtonBar>
                                  <buttons>
-                                    <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Save" />
+                                    <Button fx:id="btnSaveCustomer" mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Save" />
                                  </buttons>
                               </ButtonBar>
                            </children>
