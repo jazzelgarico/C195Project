@@ -313,6 +313,27 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    void onActionDeleteAppointment(ActionEvent event) {
+        int appointmentId = tblViewAppointment.getSelectionModel().getSelectedItem().getAppointmentId();
+        DBAccess.deleteCustomer(appointmentId);
+        updateAppointmentTable();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Deletion successful.");
+        alert.setContentText("Appointment with ID number "+ appointmentId+" has been deleted.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    void onActionEditAppointment(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionSaveAppointment(ActionEvent event) {
+
+    }
+
     /**
      * On initialize, updates Customer TableView, Appointment TableView, and country combo box
      *
