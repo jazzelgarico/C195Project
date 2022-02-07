@@ -104,7 +104,7 @@ public class DBAccess {
      * @return true if login credentials are valid, false if login credentials are not valid
      */
     public static boolean validateLogin(String username,String password) {
-        boolean isLoginValid = true;//CHANGE THIS
+        boolean isLoginValid = true;//FIX ME
         try{
             String query = "SELECT * from users";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
