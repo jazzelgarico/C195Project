@@ -74,4 +74,14 @@ public class Contact {
      */
     public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress;}
 
+    /**
+     * Override of toString: returns contactName.
+     *
+     * @return Contact's contactName
+     */
+    @Override
+    public String toString() {
+        return contactName;
+    }
+
 }
