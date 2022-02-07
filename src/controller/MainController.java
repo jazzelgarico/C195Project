@@ -142,6 +142,9 @@ public class MainController implements Initializable {
     private ComboBox<Contact> comboContact;
 
     @FXML
+    private DatePicker datePicker;
+
+    @FXML
     private ComboBox<LocalTime> comboEndTime;
 
     @FXML
@@ -152,9 +155,6 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField txtFldAppID;
-
-    @FXML
-    private TextField txtFldDate;
 
     @FXML
     private TextField txtFldDesc;
@@ -394,6 +394,12 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionSaveAppointment(ActionEvent event) {
+
+    }
+
+
+    @FXML
+    void onActionDatePicker(ActionEvent event) {
 
     }
 
