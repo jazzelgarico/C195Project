@@ -204,9 +204,22 @@ public class DBAccess {
             if (updateSuccess) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Update successful.");
-                alert.setContentText("Customer with ID number "+id+" has been updated.");
+                alert.setContentText("Customer with ID number " + id + " has been updated.");
             }
         } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    /**
+     * Deletes the appointment matching the given appointmentId from the database.
+     *
+     * @param apptId apptID of appointment to delete
+     */
+    public static void deleteAppointment(int apptId) {
+        String query =  "DELETE FROM appointments WHERE Appointment_ID=" + apptId;
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ps.execute();
+        } catch (SQLException e) { e.printStackTrace(); };
     }
 
 }
