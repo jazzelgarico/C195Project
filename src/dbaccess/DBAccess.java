@@ -4,10 +4,7 @@ import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import model.Appointment;
-import model.Country;
-import model.Customer;
-import model.FirstLevelDivision;
+import model.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -220,6 +217,26 @@ public class DBAccess {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ps.execute();
         } catch (SQLException e) { e.printStackTrace(); };
+    }
+
+    /**
+     * Given a contactId, returns a Contact with information from associated contact from the database.
+     *
+     * @param contactId contactId to find
+     * @return Contact with associated contactId
+     */
+    public static Contact getContactfromId(int contactId) {
+        String query = "SELECT * from contacts WHERE Contact_ID=" + contactId + ";";
+        Contact contact = new Contact();
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            String name = rs.getString("Contact_Name");
+            String email = rs.getString("Email");
+            contact = new Contact(contactId, name, email);
+        } catch(SQLException e) { e.printStackTrace(); }
+        return contact;
     }
 
 }
