@@ -239,4 +239,21 @@ public class DBAccess {
         return contact;
     }
 
+    public static ObservableList<Contact> getAllContacts() {
+        ObservableList<Contact> list = FXCollections.observableArrayList();
+        String query = "SELECT * from contacts;";
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int contactId = rs.getInt("Contact_ID");
+                String name = rs.getString("Contact_Name");
+                String email = rs.getString("Email");
+                Contact contact = new Contact(contactId, name, email);
+                list.add(contact);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
 }
