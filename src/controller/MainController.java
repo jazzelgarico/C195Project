@@ -362,5 +362,6 @@ public class MainController implements Initializable {
         updateCustomerTable();
         updateAppointmentTable();
         comboCountry.setItems(DBAccess.getCountries());
+        comboContact.setItems(DBAccess.getAllContacts());
     }
 }
