@@ -330,7 +330,7 @@ public class MainController implements Initializable {
         txtFldTitle.setText(appointment.getTitle());
         txtFldDesc.setText(appointment.getDescription());
         txtFldLocation.setText(appointment.getLocation());
-
+        comboContact.setValue(DBAccess.getContactfromId(appointment.getContactId()));
         /**
         if (txtFldCustomerIDCustomer.getText().isEmpty()) {
             //Adds new customer
