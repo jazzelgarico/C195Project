@@ -125,8 +125,8 @@
                   </TableView>
                   <ButtonBar>
                      <buttons>
-                        <Button fx:id="btnEditAppointment" mnemonicParsing="false" text="Edit" />
-                        <Button fx:id="btnDeleteAppointment" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="btnEditAppointment" mnemonicParsing="false" onAction="#onActionEditAppointment" text="Edit" />
+                        <Button fx:id="btnDeleteAppointment" mnemonicParsing="false" onAction="#onActionDeleteAppointment" text="Delete" />
                      </buttons>
                   </ButtonBar>
                   <TitledPane alignment="TOP_LEFT" maxWidth="500.0" text="Appointment Form">
@@ -178,7 +178,7 @@
                               </GridPane>
                               <ButtonBar>
                                  <buttons>
-                                    <Button fx:id="btnSaveAppointment" mnemonicParsing="false" text="Save" />
+                                    <Button fx:id="btnSaveAppointment" mnemonicParsing="false" onAction="#onActionSaveAppointment" text="Save" />
                                  </buttons>
                               </ButtonBar>
                            </children>
