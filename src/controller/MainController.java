@@ -6,13 +6,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import model.Appointment;
 import model.Country;
 import model.Customer;
 import model.FirstLevelDivision;
 
+import javax.swing.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -42,13 +46,8 @@ public class MainController implements Initializable {
     private ComboBox<?> comboContact;
 
     @FXML
-    private ComboBox<Country> comboCountry;
-
-    @FXML
     private ComboBox<?> comboEndTime;
 
-    @FXML
-    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
 
     @FXML
     private ComboBox<?> comboStartTime;
@@ -122,14 +121,32 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Customer, String> colPostalCode;
 
+    //Customer Form
+
+    @FXML
+    private TextField txtFldCustomerIDCustomer;
+
+    @FXML
+    private TextField txtFldName;
+
     @FXML
     private TextField txtFldAddress;
 
     @FXML
-    private TextField txtFldAppID;
+    private TextField txtFldPhoneNumber;
 
     @FXML
-    private TextField txtFldCustomerID;
+    private TextField txtFldPostalCode;
+
+    @FXML
+    private ComboBox<Country> comboCountry;
+
+    @FXML
+    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
+
+
+    @FXML
+    private TextField txtFldAppID;
 
     @FXML
     private TextField txtFldDate;
@@ -139,15 +156,6 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField txtFldLocation;
-
-    @FXML
-    private TextField txtFldName;
-
-    @FXML
-    private TextField txtFldPhoneNumber;
-
-    @FXML
-    private TextField txtFldPostalCode;
 
     @FXML
     private TextField txtFldTitle;
@@ -193,8 +201,10 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void onActionCustomerEdit(ActionEvent event) {
+    void onActionEditCustomer(ActionEvent event) {
+        System.out.println(event.getEventType().toString());
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
+        int id = customer.getCustomerId();
         String name = customer.getCustomerName();
         String address = customer.getAddress();
         String phone = customer.getPhoneNumber();
@@ -203,35 +213,62 @@ public class MainController implements Initializable {
         FirstLevelDivision division = DBAccess.getFirstLevelDivisionByID(divisionId);
         Country country = DBAccess.getCountryByID(division.getCountryId());
 
+        txtFldCustomerIDCustomer.setText(Integer.toString(id));
         txtFldName.setText(name);
         txtFldAddress.setText(address);
         txtFldPhoneNumber.setText(phone);
         txtFldPostalCode.setText(postalCode);
         comboFirstLevelDiv.setValue(division);
         comboCountry.setValue(country);
+
     }
 
     @FXML
     void onActionSaveCustomer(ActionEvent event) {
-        String customerName = txtFldName.getText();
-        String address = txtFldAddress.getText();
-        String postalCode = txtFldPostalCode.getText();
-        String phoneNumber = txtFldPhoneNumber.getText();
-        int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId();
+        //Get Form Data
+        if (comboFirstLevelDiv.getValue().equals(null)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("First-Level Division must be specified");
+            alert.showAndWait();
+        }
+        else {
+            String customerName = txtFldName.getText();
+            String address = txtFldAddress.getText();
+            String postalCode = txtFldPostalCode.getText();
+            String phoneNumber = txtFldPhoneNumber.getText();
+            int divisionID = comboFirstLevelDiv.getSelectionModel().getSelectedItem().getDivisionId();
 
-        Customer customer = new Customer(0,customerName,address,postalCode,phoneNumber,divisionID);
-        DBAccess.addCustomer(customer);
-        updateCustomerTable();
+            if (txtFldCustomerIDCustomer.getText().isEmpty()) {
+                Customer customer = new Customer(customerName, address, postalCode, phoneNumber, divisionID);
+                DBAccess.addCustomer(customer);
+            } else {
+                int customerId = Integer.parseInt(txtFldCustomerIDCustomer.getText());
+                Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
+                DBAccess.editCustomer(customer);
+            }
+
+            updateCustomerTable();
+            //Clear Customer Form
+            txtFldCustomerIDCustomer.clear();
+            txtFldName.clear();
+            txtFldAddress.clear();
+            txtFldPostalCode.clear();
+            txtFldPhoneNumber.clear();
+            comboFirstLevelDiv.setValue(null);
+            comboCountry.setValue(null);
+        }
     }
 
     @FXML
     void onActionComboCountry(ActionEvent event) {
-        Country country = comboCountry.getSelectionModel().getSelectedItem();
-        comboFirstLevelDiv.setItems(DBAccess.getFirstLevelDivision(country.getCountryId()));
+        //onActionSaveCustomer triggers error during comboCountry.setValue(null) so must check if selection is empty
+        if (!comboCountry.getSelectionModel().isEmpty()) {
+            Country country = comboCountry.getSelectionModel().getSelectedItem();
+            comboFirstLevelDiv.setItems(DBAccess.getFirstLevelDivision(country.getCountryId()));
+        }
     }
 
-
-        @Override
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateCustomerTable();
         updateAppointmentTable();
