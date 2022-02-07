@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class DBAccess {
@@ -55,8 +56,8 @@ public class DBAccess {
                 int contactId = rs.getInt("Contact_ID");
                 String type = rs.getString("Type");
                 LocalDate appointmentDate = rs.getTimestamp("Start").toLocalDateTime().toLocalDate();
-                LocalTime startTime = rs.getTime("Start").toLocalTime();
-                LocalTime endTime = rs.getTime("End").toLocalTime();
+                LocalDateTime startTime = rs.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime endTime = rs.getTimestamp("End").toLocalDateTime();
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
                 //Create new Appointment
