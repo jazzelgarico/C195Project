@@ -196,22 +196,21 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionSaveCustomer(ActionEvent event) {
-        int customerID = 0;
         String customerName = txtFldName.getText();
         String address = txtFldAddress.getText();
         String postalCode = txtFldPostalCode.getText();
         String phoneNumber = txtFldPhoneNumber.getText();
         int divisionID = 1; //FIX ME
 
-        Customer customer = new Customer(customerID,customerName,address,postalCode,phoneNumber,divisionID);
+        Customer customer = new Customer(0,customerName,address,postalCode,phoneNumber,divisionID);
         DBAccess.addCustomer(customer);
         updateCustomerTable();
-
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         updateCustomerTable();
         updateAppointmentTable();
+
     }
 }
