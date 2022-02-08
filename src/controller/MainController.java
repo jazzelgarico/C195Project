@@ -12,6 +12,7 @@ import model.*;
 
 import java.net.URL;
 import java.time.*;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -163,6 +164,9 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField txtFldTitle;
+
+    @FXML
+    private TextField txtFldCustomerIDApp;
 
     @FXML
     private TextField txtFldUserID;
@@ -369,31 +373,34 @@ public class MainController implements Initializable {
         alert.showAndWait();
     }
 
+    /**
+     * Fills the appointment form with the information for the selected appointment.
+     *
+     * @param event the event which triggers appointment to be edited
+     */
     @FXML
     void onActionEditAppointment(ActionEvent event) {
-        //Get Appointment Data
-        Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
-        txtFldAppID.setText(Integer.toString(appointment.getAppointmentId()));
-        txtFldTitle.setText(appointment.getTitle());
-        txtFldDesc.setText(appointment.getDescription());
-        txtFldLocation.setText(appointment.getLocation());
-        comboContact.setValue(DBAccess.getContactfromId(appointment.getContactId()));
-        txtFldType.setText(appointment.getType());
-        /**
-        if (txtFldCustomerIDCustomer.getText().isEmpty()) {
-            //Adds new customer
-            Customer customer = new Customer(customerName, address, postalCode, phoneNumber, divisionID);
-            DBAccess.addCustomer(customer);
+        if (tblViewAppointment.getSelectionModel().isEmpty()) {
+            // Warn user if no appointment is selected
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No appointment selected.");
+            alert.setContentText("Please select an appointment to edit.");
+            alert.showAndWait();
         } else {
-            //Edits existing customer
-            int customerId = Integer.parseInt(txtFldCustomerIDCustomer.getText());
-            Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
-            DBAccess.editCustomer(customer);
+            // Get Appointment Data
+            Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
+            txtFldAppID.setText(Integer.toString(appointment.getAppointmentId()));
+            txtFldTitle.setText(appointment.getTitle());
+            txtFldDesc.setText(appointment.getDescription());
+            txtFldLocation.setText(appointment.getLocation());
+            comboContact.setValue(DBAccess.getContactfromId(appointment.getContactId()));
+            txtFldType.setText(appointment.getType());
+            datePicker.setValue(appointment.getAppointmentDate());
+            comboStartTime.setValue(appointment.getStartTime());
+            comboEndTime.setValue(appointment.getEndTime());
+            txtFldCustomerIDApp.setText(Integer.toString(appointment.getCustomerId()));
+            txtFldUserID.setText(Integer.toString(appointment.getUserId()));
         }
-
-        updateCustomerTable();
-        clearCustomerForm();
-         */
     }
 
     @FXML
