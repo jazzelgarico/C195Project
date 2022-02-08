@@ -28,7 +28,7 @@
                <children>
                   <VBox spacing="10.0">
                      <children>
-                        <TableView fx:id="tblViewCustomer" prefWidth="807.0">
+                        <TableView fx:id="tblViewCustomer" prefHeight="400.0" prefWidth="670.0">
                           <columns>
                             <TableColumn fx:id="colCustomerName" prefWidth="150.0" text="Name" />
                               <TableColumn fx:id="colAddress" prefWidth="150.0" text="Address" />
@@ -164,7 +164,7 @@
                                     <Label text="End Time" GridPane.rowIndex="8" />
                                     <Label text="Customer ID" GridPane.rowIndex="9" />
                                     <Label text="User ID" GridPane.rowIndex="10" />
-                                    <TextField fx:id="txtFldAppID" GridPane.columnIndex="1" />
+                                    <TextField fx:id="txtFldAppID" disable="true" editable="false" GridPane.columnIndex="1" />
                                     <TextField fx:id="txtFldTitle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <TextField fx:id="txtFldDesc" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <TextField fx:id="txtFldLocation" GridPane.columnIndex="1" GridPane.rowIndex="3" />
