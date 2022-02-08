@@ -188,15 +188,10 @@ public class MainController implements Initializable {
                     @Override
                     protected void updateItem(LocalDate item, boolean empty) {
                         super.updateItem(item,empty);
-
                         if (empty || item == null) {
                             setText(null);
                         } else {
-                            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                            ZoneId orgZoneId = ZoneId.of("America/New_York");
-                            ZonedDateTime orgZDT = ZonedDateTime.of(item,LocalTime.of(8,0),orgZoneId);
-                            ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
-                            setText(orgToLocal.format(DateTimeFormatter.ofPattern("M/d/yyyy")));
+                            setText(item.format(DateTimeFormatter.ofPattern("M/d/yyyy")));
                         }
                     }
                 };
@@ -206,15 +201,10 @@ public class MainController implements Initializable {
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item,empty);
-
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                    ZoneId orgZoneId = ZoneId.of("America/New_York");
-                    ZonedDateTime orgZDT = ZonedDateTime.of(item,orgZoneId);
-                    ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
-                    setText(orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
+                    setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
                 }
             }
         };
