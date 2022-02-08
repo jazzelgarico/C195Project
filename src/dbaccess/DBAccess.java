@@ -1,5 +1,6 @@
 package dbaccess;
 
+import controller.TimeHelper;
 import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,9 +79,9 @@ public class DBAccess {
                 String location = rs.getString("Location");
                 int contactId = rs.getInt("Contact_ID");
                 String type = rs.getString("Type");
-                LocalDate appointmentDate = rs.getTimestamp("Start").toLocalDateTime().toLocalDate();
-                LocalDateTime startTime = rs.getTimestamp("Start").toLocalDateTime();
-                LocalDateTime endTime = rs.getTimestamp("End").toLocalDateTime();
+                LocalDateTime startTime = TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
+                LocalDateTime endTime = TimeHelper.serverToClientTime(rs.getTimestamp("End").toLocalDateTime());
+                LocalDate appointmentDate = startTime.toLocalDate();
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
                 //Create new Appointment
