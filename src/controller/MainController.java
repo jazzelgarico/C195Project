@@ -364,7 +364,7 @@ public class MainController implements Initializable {
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
         int appointmentId = tblViewAppointment.getSelectionModel().getSelectedItem().getAppointmentId();
-        DBAccess.deleteCustomer(appointmentId);
+        DBAccess.deleteAppointment(appointmentId);
         updateAppointmentTable();
         // Alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -415,14 +415,19 @@ public class MainController implements Initializable {
         LocalDateTime end = comboEndTime.getSelectionModel().getSelectedItem();
         int customerId = Integer.parseInt(txtFldCustomerIDApp.getText());
         int userId = Integer.parseInt(txtFldUserID.getText());
-
+        Appointment appointment = new Appointment(title, desc, location, contactId, type, appDate, start, end,
+                customerId, userId);
         if (txtFldAppID.getText().isEmpty()) {
             // Create New Appointment
-
+            DBAccess.addAppointment(appointment);
         }
         else {
-            // Edit
+            // Edit Existing Appointment
+            int appointmentId = Integer.parseInt(txtFldAppID.getText());
+            appointment.setAppointmentId(appointmentId);
+            DBAccess.editAppointment(appointment);
         }
+        updateAppointmentTable();
     }
 
 
