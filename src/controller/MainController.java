@@ -150,7 +150,7 @@ public class MainController implements Initializable {
     private ComboBox<LocalDateTime> comboStartTime;
 
     @FXML
-    private ChoiceBox<?> comboType;
+    private TextField txtFldType;
 
     @FXML
     private TextField txtFldAppID;
@@ -378,6 +378,7 @@ public class MainController implements Initializable {
         txtFldDesc.setText(appointment.getDescription());
         txtFldLocation.setText(appointment.getLocation());
         comboContact.setValue(DBAccess.getContactfromId(appointment.getContactId()));
+        txtFldType.setText(appointment.getType());
         /**
         if (txtFldCustomerIDCustomer.getText().isEmpty()) {
             //Adds new customer
