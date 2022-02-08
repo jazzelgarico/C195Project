@@ -37,18 +37,19 @@ public class TimeHelper {
         return clientTime;
     }
 
-    public static ZonedDateTime businessToClientTime(LocalDate ld, LocalTime lt) {
-        ZonedDateTime businessTime = ZonedDateTime.of(ld, lt, BUSINESS_ZONE_ID);
-        ZonedDateTime clientTime =  businessTime.withZoneSameInstant(CLIENT_ZONE_ID);
+    public static LocalDateTime businessToClientTime(LocalDate ld, LocalTime lt) {
+        ZonedDateTime businessTimeZ = ZonedDateTime.of(ld, lt, BUSINESS_ZONE_ID);
+        ZonedDateTime clientTimeZ =  businessTimeZ.withZoneSameInstant(CLIENT_ZONE_ID);
+        LocalDateTime clientTime = clientTimeZ.toLocalDateTime();
         return clientTime;
     }
 
     public static LocalDateTime getTimeOpen(LocalDate ld) {
-        return businessToClientTime(ld, TIME_OPEN).toLocalDateTime();
+        return businessToClientTime(ld, TIME_OPEN);
     }
 
     public static LocalDateTime getTimeClose(LocalDate ld) {
-        return businessToClientTime(ld, TIME_CLOSE).toLocalDateTime();
+        return businessToClientTime(ld, TIME_CLOSE);
     }
 
 }
