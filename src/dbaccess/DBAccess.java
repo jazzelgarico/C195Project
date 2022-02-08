@@ -293,7 +293,7 @@ public class DBAccess {
     public static boolean editAppointment(Appointment appointment) {
         int appointmentID = appointment.getAppointmentId();;
         String query = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?," +
-                "Last_Update=NOW(), CustomerID=?, UserID=?, ContactID=? WHERE Appointment_ID=" + appointmentID +
+                "Last_Update=NOW(), Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID=" + appointmentID +
                 ";";
         boolean updateSuccess = false;
         try {
