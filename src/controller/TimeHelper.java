@@ -5,42 +5,50 @@ import java.util.TimeZone;
 
 public class TimeHelper {
 
-    private static final ZoneId serverZoneId = ZoneId.of("America/New_York");
-    private static final ZoneId clientZoneId = ZoneId.of(TimeZone.getDefault().getID());
-    private static final LocalTime timeOpen = LocalTime.of(8,0);
-    private static final LocalTime timeClose = LocalTime.of(22,0);
+    private static final ZoneId SERVER_ZONE_ID = ZoneId.of("UTC");
+    private static final ZoneId BUSINESS_ZONE_ID = ZoneId.of("America/New_York");
+    private static final ZoneId CLIENT_ZONE_ID = ZoneId.of(TimeZone.getDefault().getID());
+    private static final LocalTime TIME_OPEN = LocalTime.of(8,0);
+    private static final LocalTime TIME_CLOSE = LocalTime.of(22,0);
     /**
      * Gets the ZoneId of the client
      *
      * @return ZoneId of Client
      */
     public static ZoneId getClientZoneId() {
-        return clientZoneId;
+        return CLIENT_ZONE_ID;
     }
 
     public static ZonedDateTime clientToServerTime(LocalDate ld, LocalTime lt) {
-        ZonedDateTime orgZDT = ZonedDateTime.of(ld,lt,serverZoneId);
-        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(clientZoneId);
-        return localZDT;
+        ZonedDateTime clientTime = ZonedDateTime.of(ld,lt, CLIENT_ZONE_ID);
+        ZonedDateTime serverTime =  clientTime.withZoneSameInstant(SERVER_ZONE_ID);
+        return serverTime;
     }
 
-    public static ZonedDateTime clientToServerTime(LocalDateTime lt) {
-        ZonedDateTime orgZDT = ZonedDateTime.of(lt,serverZoneId);
-        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(clientZoneId);
-        return localZDT;
+    public static ZonedDateTime clientToServerTime(LocalDateTime ldt) {
+        ZonedDateTime clientTime = ZonedDateTime.of(ldt, CLIENT_ZONE_ID);
+        ZonedDateTime serverTime =  clientTime.withZoneSameInstant(SERVER_ZONE_ID);
+        return serverTime;
     }
 
     public static ZonedDateTime serverToClientTime(LocalDateTime lt) {
-        ZonedDateTime localZDT = ZonedDateTime.of(lt,clientZoneId);
-        ZonedDateTime orgZDT =  localZDT.withZoneSameInstant(serverZoneId);
-        return orgZDT;
+        ZonedDateTime serverTime = ZonedDateTime.of(lt, SERVER_ZONE_ID);
+        ZonedDateTime clientTime =  serverTime.withZoneSameInstant(CLIENT_ZONE_ID);
+        return clientTime;
+    }
+
+    public static ZonedDateTime businessToClientTime(LocalDate ld, LocalTime lt) {
+        ZonedDateTime businessTime = ZonedDateTime.of(ld, lt, BUSINESS_ZONE_ID);
+        ZonedDateTime clientTime =  businessTime.withZoneSameInstant(CLIENT_ZONE_ID);
+        return clientTime;
     }
 
     public static LocalDateTime getTimeOpen(LocalDate ld) {
-        return clientToServerTime(ld,timeOpen).toLocalDateTime();
+        return businessToClientTime(ld, TIME_OPEN).toLocalDateTime();
     }
 
     public static LocalDateTime getTimeClose(LocalDate ld) {
-        return clientToServerTime(ld,timeClose).toLocalDateTime();
+        return businessToClientTime(ld, TIME_CLOSE).toLocalDateTime();
     }
+
 }
