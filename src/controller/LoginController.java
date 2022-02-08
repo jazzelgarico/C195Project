@@ -71,6 +71,6 @@ public class LoginController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lblRegion.setText("Region: "+ Locale.getDefault());
+        lblRegion.setText("Region: "+ TimeHelper.getClientZoneId());
     }
 }
