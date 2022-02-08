@@ -405,7 +405,24 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionSaveAppointment(ActionEvent event) {
+        String title = txtFldTitle.getText();
+        String desc = txtFldDesc.getText();
+        String location = txtFldLocation.getText();
+        int contactId = comboContact.getSelectionModel().getSelectedItem().getContactId();
+        String type = txtFldType.getText();
+        LocalDate appDate = datePicker.getValue();
+        LocalDateTime start = comboStartTime.getSelectionModel().getSelectedItem();
+        LocalDateTime end = comboEndTime.getSelectionModel().getSelectedItem();
+        int customerId = Integer.parseInt(txtFldCustomerIDApp.getText());
+        int userId = Integer.parseInt(txtFldUserID.getText());
 
+        if (txtFldAppID.getText().isEmpty()) {
+            // Create New Appointment
+
+        }
+        else {
+            // Edit
+        }
     }
 
 
@@ -421,7 +438,7 @@ public class MainController implements Initializable {
             comboEndTime.getItems().add(localStart.plusMinutes(15));
             localStart = localStart.plusMinutes(15);
         }
-
+        //Cell factory for start time and end time combo boxes
         Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
             @Override
             protected void updateItem(LocalDateTime item, boolean empty) {
@@ -433,7 +450,7 @@ public class MainController implements Initializable {
                 }
             }
         };
-
+        //Format combo list
         comboStartTime.setCellFactory(timeFactory);
         comboStartTime.setButtonCell(timeFactory.call(null));
         comboEndTime.setCellFactory(timeFactory);
