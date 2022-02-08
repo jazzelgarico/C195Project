@@ -10,7 +10,6 @@ public class DBConnection {
     private static final String location = "//localhost/";
     private static final String databaseName = "client_schedule";
     private static final String jdbcUrl = protocol + vendor + location + databaseName + "?connectionTimeZone = SERVER"; // LOCAL
-    private static final String driver = "com.mysql.cj.jdbc.Driver"; // Driver reference
     private static final String userName = ""; // Username
     private static String password = ""; // Password
     public static Connection conn = null;  // Connection Interface
@@ -18,15 +17,11 @@ public class DBConnection {
     public static void openConnection()
     {
         try {
-            Class.forName(driver); // Locate Driver
             conn = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
             System.out.println("Connection successful!");
         } catch(SQLException e) {
             e.printStackTrace();
-        } catch(ClassNotFoundException e) {
-            e.printStackTrace();
         }
-
     }
 
     public static Connection getConnection(){
