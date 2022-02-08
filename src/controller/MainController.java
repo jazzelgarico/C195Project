@@ -145,10 +145,10 @@ public class MainController implements Initializable {
     private DatePicker datePicker;
 
     @FXML
-    private ComboBox<LocalTime> comboEndTime;
+    private ComboBox<LocalDateTime> comboEndTime;
 
     @FXML
-    private ComboBox<LocalTime> comboStartTime;
+    private ComboBox<LocalDateTime> comboStartTime;
 
     @FXML
     private ChoiceBox<?> comboType;
@@ -194,7 +194,7 @@ public class MainController implements Initializable {
                             setText(null);
                         } else {
                             ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                            ZoneId orgZoneId = ZoneId.of("EST5EDT");
+                            ZoneId orgZoneId = ZoneId.of("America/New_York");
                             ZonedDateTime orgZDT = ZonedDateTime.of(item,LocalTime.of(8,0),orgZoneId);
                             ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
                             setText(orgToLocal.format(DateTimeFormatter.ofPattern("M/d/yyyy")));
@@ -212,7 +212,7 @@ public class MainController implements Initializable {
                     setText(null);
                 } else {
                     ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                    ZoneId orgZoneId = ZoneId.of("EST5EDT");
+                    ZoneId orgZoneId = ZoneId.of("America/New_York");
                     ZonedDateTime orgZDT = ZonedDateTime.of(item,orgZoneId);
                     ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
                     setText(orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
@@ -412,9 +412,61 @@ public class MainController implements Initializable {
     }
 
 
+
     @FXML
     void onActionDatePicker(ActionEvent event) {
+        LocalDate ld = datePicker.getValue();
+        ZonedDateTime localZDTStart = orgToLocal(ld,LocalTime.of(8,0));
+        ZonedDateTime localZDTEnd = orgToLocal(ld,LocalTime.of(22,0));
 
+        while (localZDTStart.isBefore(localZDTEnd)) {
+            comboStartTime.getItems().add(localZDTStart.toLocalDateTime());
+            comboEndTime.getItems().add(localZDTStart.plusMinutes(15).toLocalDateTime());
+            localZDTStart = localZDTStart.plusMinutes(15);
+        }
+
+        Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
+                }
+            }
+        };
+
+        comboStartTime.setCellFactory(timeFactory);
+        comboStartTime.setButtonCell(timeFactory.call(null));
+        comboEndTime.setCellFactory(timeFactory);
+        comboEndTime.setButtonCell(timeFactory.call(null));
+
+    }
+
+
+    public ZonedDateTime orgToLocal(LocalDate ld, LocalTime lt) {
+        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+        ZoneId orgZoneId = ZoneId.of("America/New_York");
+        ZonedDateTime orgZDT = ZonedDateTime.of(ld,lt,orgZoneId);
+        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(localZoneId);
+        return localZDT;
+    }
+
+    public ZonedDateTime orgToLocal(LocalDateTime lt) {
+        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+        ZoneId orgZoneId = ZoneId.of("America/New_York");
+        ZonedDateTime orgZDT = ZonedDateTime.of(lt,orgZoneId);
+        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(localZoneId);
+        return localZDT;
+    }
+
+    public ZonedDateTime localToOrg(LocalDateTime lt) {
+        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+        ZoneId orgZoneId = ZoneId.of("America/New_York");
+        ZonedDateTime localZDT = ZonedDateTime.of(lt,localZoneId);
+        ZonedDateTime orgZDT =  localZDT.withZoneSameInstant(orgZoneId);
+        return orgZDT;
     }
 
     /**
@@ -427,43 +479,6 @@ public class MainController implements Initializable {
         updateAppointmentTable();
         comboCountry.setItems(DBAccess.getCountries());
         comboContact.setItems(DBAccess.getAllContacts());
-        LocalTime start = LocalTime.of(8,0);
-        LocalTime end = LocalTime.of(22,0);
-
-
-
-        Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item,empty);
-                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                ZoneId orgZoneId = ZoneId.of("EST5EDT");
-                ZonedDateTime orgZDT = ZonedDateTime.of(item,orgZoneId);
-                ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
-                setText(empty ? "" : orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
-            }
-        };
-
-        while (start.isBefore(end)){
-            comboStartTime.getItems().add(start);
-            start = start.plusMinutes(15);
-        }
-
-
-        /*
-        comboStartTime.setCellFactory(factory);
-        start = LocalTime.of(8,30);
-        end = LocalTime.of(22,0);
-
-        while (start.isBefore(end.plusSeconds(1))){
-            comboEndTime.getItems().add(start);
-            start = start.plusMinutes(15);
-        }
-        comboStartTime.setCellFactory(factory);
-        comboStartTime.setButtonCell(factory.call(null));
-        comboEndTime.setCellFactory(factory);
-        comboEndTime.setButtonCell(factory.call(null));
-        */
-
     }
+
 }
