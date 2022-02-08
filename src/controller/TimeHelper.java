@@ -19,21 +19,24 @@ public class TimeHelper {
         return CLIENT_ZONE_ID;
     }
 
-    public static ZonedDateTime clientToServerTime(LocalDate ld, LocalTime lt) {
-        ZonedDateTime clientTime = ZonedDateTime.of(ld,lt, CLIENT_ZONE_ID);
-        ZonedDateTime serverTime =  clientTime.withZoneSameInstant(SERVER_ZONE_ID);
+    public static LocalDateTime clientToServerTime(LocalDate ld, LocalTime lt) {
+        ZonedDateTime clientTimeZoned = ZonedDateTime.of(ld,lt, CLIENT_ZONE_ID);
+        ZonedDateTime serverTimeZoned =  clientTimeZoned.withZoneSameInstant(SERVER_ZONE_ID);
+        LocalDateTime serverTime = serverTimeZoned.toLocalDateTime();
         return serverTime;
     }
 
-    public static ZonedDateTime clientToServerTime(LocalDateTime ldt) {
-        ZonedDateTime clientTime = ZonedDateTime.of(ldt, CLIENT_ZONE_ID);
-        ZonedDateTime serverTime =  clientTime.withZoneSameInstant(SERVER_ZONE_ID);
+    public static LocalDateTime clientToServerTime(LocalDateTime ldt) {
+        ZonedDateTime clientTimeZoned = ZonedDateTime.of(ldt, CLIENT_ZONE_ID);
+        ZonedDateTime serverTimeZoned =  clientTimeZoned.withZoneSameInstant(SERVER_ZONE_ID);
+        LocalDateTime serverTime = serverTimeZoned.toLocalDateTime();
         return serverTime;
     }
 
-    public static ZonedDateTime serverToClientTime(LocalDateTime lt) {
-        ZonedDateTime serverTime = ZonedDateTime.of(lt, SERVER_ZONE_ID);
-        ZonedDateTime clientTime =  serverTime.withZoneSameInstant(CLIENT_ZONE_ID);
+    public static LocalDateTime serverToClientTime(LocalDateTime lt) {
+        ZonedDateTime serverTimeZoned = ZonedDateTime.of(lt, SERVER_ZONE_ID);
+        ZonedDateTime clientTimeZoned =  serverTimeZoned.withZoneSameInstant(CLIENT_ZONE_ID);
+        LocalDateTime clientTime = clientTimeZoned.toLocalDateTime();
         return clientTime;
     }
 
