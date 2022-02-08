@@ -415,13 +415,13 @@ public class MainController implements Initializable {
     @FXML
     void onActionDatePicker(ActionEvent event) {
         LocalDate ld = datePicker.getValue();
-        ZonedDateTime localZDTStart = TimeHelper.orgToLocal(ld,LocalTime.of(8,0));
-        ZonedDateTime localZDTEnd = TimeHelper.orgToLocal(ld,LocalTime.of(22,0));
+        LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
+        LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
 
-        while (localZDTStart.isBefore(localZDTEnd)) {
-            comboStartTime.getItems().add(localZDTStart.toLocalDateTime());
-            comboEndTime.getItems().add(localZDTStart.plusMinutes(15).toLocalDateTime());
-            localZDTStart = localZDTStart.plusMinutes(15);
+        while (localStart.isBefore(localEnd)) {
+            comboStartTime.getItems().add(localStart);
+            comboEndTime.getItems().add(localStart.plusMinutes(15));
+            localStart = localStart.plusMinutes(15);
         }
 
         Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
@@ -435,6 +435,7 @@ public class MainController implements Initializable {
                 }
             }
         };
+
         comboStartTime.setCellFactory(timeFactory);
         comboStartTime.setButtonCell(timeFactory.call(null));
         comboEndTime.setCellFactory(timeFactory);
