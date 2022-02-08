@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Appointment {
     private int appointmentId;
@@ -15,6 +16,35 @@ public class Appointment {
     private LocalDateTime endTime;
     private int customerId;
     private int userId;
+
+    /**
+     * Constructor for Appointment without appointmentId
+     *
+     * @param title title to set
+     * @param description description to set
+     * @param location location to set
+     * @param contactId contactId to set
+     * @param type appointment type to set
+     * @param appointmentDate appointment date to set
+     * @param startTime start time to set
+     * @param endTime end time to set
+     * @param customerId customerId to set
+     * @param userId userId to set
+     */
+    public Appointment(String title, String description, String location, int contactId,
+                       String type, LocalDate appointmentDate, LocalDateTime startTime, LocalDateTime endTime,
+                       int customerId, int userId) {
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.contactId = contactId;
+        this.type = type;
+        this.appointmentDate = appointmentDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.customerId = customerId;
+        this.userId = userId;
+    }
 
     /**
      * Constructor for Appointment
