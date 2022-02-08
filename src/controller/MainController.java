@@ -199,7 +199,6 @@ public class MainController implements Initializable {
                             ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
                             setText(orgToLocal.format(DateTimeFormatter.ofPattern("M/d/yyyy")));
                         }
-
                     }
                 };
 
@@ -218,11 +217,11 @@ public class MainController implements Initializable {
                     ZonedDateTime orgToLocal = orgZDT.withZoneSameInstant(localZoneId);
                     setText(orgToLocal.format(DateTimeFormatter.ofPattern("h:mma")));
                 }
-
             }
         };
 
         tblViewAppointment.setItems(DBAccess.addAllAppointments());
+        // Fills table columns
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -230,19 +229,21 @@ public class MainController implements Initializable {
         colContact.setCellValueFactory(new PropertyValueFactory<>("contactId"));
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
-        colDate.setCellFactory(dateFactory);
         colStart.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         colEnd.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        colEnd.setCellFactory(timeFactory);
-        colStart.setCellFactory(timeFactory);
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         colUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        // Formats columns
+        colDate.setCellFactory(dateFactory);
+        colEnd.setCellFactory(timeFactory);
+        colStart.setCellFactory(timeFactory);
     }
 
     /**
      * Deletes selected customer in Customer TableView and appointments associated with the selected Customer
      * from the database. After Customer is deleted, Customer Table View and Appointment TableView is refreshed.
-     * Informs user that deletion is successful with an alert.
+     * Informs user that deletion is successful with an alert that specifies customerID of deleted Customer and the
+     * number of appointments deleted.
      *
      * @param event the event which triggers customer to be deleted
      */
@@ -250,8 +251,10 @@ public class MainController implements Initializable {
     void onActionCustomerDelete(ActionEvent event) {
         int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
         int appointmentsDeleted = DBAccess.deleteCustomer(customerId);
+        // Update Table Views
         updateCustomerTable();
         updateAppointmentTable();
+        // Alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Deletion successful.");
         if (appointmentsDeleted == 1) {
@@ -281,7 +284,7 @@ public class MainController implements Initializable {
         int divisionId = customer.getDivisionId();
         FirstLevelDivision division = DBAccess.getFirstLevelDivisionByID(divisionId);
         Country country = DBAccess.getCountryByID(division.getCountryId());
-
+        // Fill text fields and combo boxes for selected Customer
         txtFldCustomerIDCustomer.setText(Integer.toString(id));
         txtFldName.setText(name);
         txtFldAddress.setText(address);
@@ -305,13 +308,14 @@ public class MainController implements Initializable {
      */
     @FXML
     void onActionSaveCustomer(ActionEvent event) {
-        //Get Form Data
         if (comboFirstLevelDiv.getValue().equals(null)) {
+            // Alert if comboFirstLevelDiv does not have a value.
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("First-Level Division must be specified");
             alert.showAndWait();
         }
         else {
+            //Get Form Data
             String customerName = txtFldName.getText();
             String address = txtFldAddress.getText();
             String postalCode = txtFldPostalCode.getText();
@@ -329,7 +333,7 @@ public class MainController implements Initializable {
                 DBAccess.editCustomer(customer);
             }
 
-            updateCustomerTable();;
+            updateCustomerTable();
             clearCustomerForm();
         }
     }
@@ -369,6 +373,7 @@ public class MainController implements Initializable {
         int appointmentId = tblViewAppointment.getSelectionModel().getSelectedItem().getAppointmentId();
         DBAccess.deleteCustomer(appointmentId);
         updateAppointmentTable();
+        // Alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Deletion successful.");
         alert.setContentText("Appointment with ID number "+ appointmentId+" has been deleted.");
