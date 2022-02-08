@@ -7,13 +7,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 
 public class DBAccess {
 
@@ -269,6 +267,29 @@ public class DBAccess {
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
+    }
+
+    public static boolean addAppointment(Appointment appointment) {
+        String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
+                " 'script', ?, ?, ?);";
+        boolean updateSuccess = false;
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ps.setString(1,appointment.getTitle());
+            ps.setString(2, appointment.getDescription());
+            ps.setString(3,appointment.getLocation());
+            ps.setString(4, appointment.getType());
+            ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
+            ps.setTimestamp(6,Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+            ps.setInt(7,appointment.getCustomerId());
+            ps.setInt(8,appointment.getUserId());
+            ps.setInt(9,appointment.getContactId());
+            updateSuccess = ps.execute();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return updateSuccess;
     }
 
 }
