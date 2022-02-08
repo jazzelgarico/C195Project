@@ -240,19 +240,27 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Deletes selected customer in Customer TableView from the database. After Customer is deleted, Customer Table
-     * View is refreshed. Informs user that deletion is successful with an alert.
+     * Deletes selected customer in Customer TableView and appointments associated with the selected Customer
+     * from the database. After Customer is deleted, Customer Table View and Appointment TableView is refreshed.
+     * Informs user that deletion is successful with an alert.
      *
      * @param event the event which triggers customer to be deleted
      */
     @FXML
     void onActionCustomerDelete(ActionEvent event) {
         int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
-        DBAccess.deleteCustomer(customerId);
+        int appointmentsDeleted = DBAccess.deleteCustomer(customerId);
         updateCustomerTable();
+        updateAppointmentTable();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Deletion successful.");
-        alert.setContentText("Customer with ID number "+ customerId+" has been deleted.");
+        if (appointmentsDeleted == 1) {
+            alert.setContentText("Customer with ID number " + customerId + " and " + appointmentsDeleted + " associated "
+                    + "appointment have been deleted.");
+        } else {
+            alert.setContentText("Customer with ID number " + customerId + " and " + appointmentsDeleted + " associated "
+                    + "appointments have been deleted.");
+        }
         alert.showAndWait();
     }
 
@@ -286,11 +294,12 @@ public class MainController implements Initializable {
 
     /**
      * Edits or creates a new customer.
-     * <p></p>
+     * <p>
      * If the customerId text field is filled in, updates the customer in the database
      * with the given customerId from the contents of the Customer Form text fields. If the customerID text filled is
      * empty, creates a new customer in the database. After customer is updated or added, updates the Customer Table
      * View and clears the Customer Form.
+     *
      *
      * @param event the event object which triggers customer to be saved
      */
@@ -320,7 +329,7 @@ public class MainController implements Initializable {
                 DBAccess.editCustomer(customer);
             }
 
-            updateCustomerTable();
+            updateCustomerTable();;
             clearCustomerForm();
         }
     }
