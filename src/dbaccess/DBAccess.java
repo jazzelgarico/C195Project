@@ -16,6 +16,29 @@ import java.time.LocalTime;
 
 public class DBAccess {
 
+    /**
+     * Validates login credentials given by the user.
+     *
+     * @param username the username provided
+     * @param password the password provided
+     * @return true if login credentials are valid, false if login credentials are not valid
+     */
+    public static boolean validateLogin(String username,String password) {
+        boolean isLoginValid = true;//FIX ME
+        try{
+            String query = "SELECT * from users";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next() && !isLoginValid) {
+                String myUser = rs.getString("User_Name");
+                String myPassword = rs.getString("Password");
+                isLoginValid = username.equals(myUser) && password.equals(myPassword);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return isLoginValid;
+    }
+
     public static ObservableList<Customer> addDBCustomers() {
         ObservableList<Customer> list = FXCollections.observableArrayList();
         try {
@@ -70,13 +93,23 @@ public class DBAccess {
         return list;
     }
 
-    public static void deleteCustomer(int customerID) {
+    public static int deleteCustomer(int customerID) {
+        int deletedAppointments = 0;
         try {
-            String query = "DELETE FROM customers WHERE Customer_ID=" + customerID;
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ps.execute();
+            String querySumAppointments= "SELECT COUNT(Appointment_ID) from appointments where Customer_ID="
+                    + customerID +";";
+            String queryAppointments = "DELETE FROM appointments WHERE Customer_ID=" + customerID + ";";
+            String queryCustomers = "DELETE FROM customers WHERE Customer_ID=" + customerID + ";";
+            PreparedStatement psSumAppointments = DBConnection.getConnection().prepareStatement(querySumAppointments);
+            PreparedStatement psAppointments = DBConnection.getConnection().prepareStatement(queryAppointments);
+            PreparedStatement psCustomers = DBConnection.getConnection().prepareStatement(queryCustomers);
+            ResultSet rs = psSumAppointments.executeQuery();
+            rs.next();
+            deletedAppointments = rs.getInt(1);
+            psAppointments.execute();
+            psCustomers.execute();
         } catch (SQLException e) { e.printStackTrace();}
-
+            return deletedAppointments;
     }
 
     public static void addCustomer(Customer customer) {
@@ -97,28 +130,8 @@ public class DBAccess {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    /**
-     * Validates login credentials given by the user.
-     *
-     * @param username the username provided
-     * @param password the password provided
-     * @return true if login credentials are valid, false if login credentials are not valid
-     */
-    public static boolean validateLogin(String username,String password) {
-        boolean isLoginValid = true;//FIX ME
-        try{
-            String query = "SELECT * from users";
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next() && !isLoginValid) {
-                String myUser = rs.getString("User_Name");
-                String myPassword = rs.getString("Password");
-                isLoginValid = username.equals(myUser) && password.equals(myPassword);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return isLoginValid;
-    }
+
 
     public static ObservableList<Country> getCountries() {
         ObservableList<Country> list = FXCollections.observableArrayList();
