@@ -2,7 +2,6 @@ package controller;
 
 import dbaccess.DBAccess;
 
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -416,8 +415,8 @@ public class MainController implements Initializable {
     @FXML
     void onActionDatePicker(ActionEvent event) {
         LocalDate ld = datePicker.getValue();
-        ZonedDateTime localZDTStart = orgToLocal(ld,LocalTime.of(8,0));
-        ZonedDateTime localZDTEnd = orgToLocal(ld,LocalTime.of(22,0));
+        ZonedDateTime localZDTStart = TimeHelper.orgToLocal(ld,LocalTime.of(8,0));
+        ZonedDateTime localZDTEnd = TimeHelper.orgToLocal(ld,LocalTime.of(22,0));
 
         while (localZDTStart.isBefore(localZDTEnd)) {
             comboStartTime.getItems().add(localZDTStart.toLocalDateTime());
@@ -436,37 +435,11 @@ public class MainController implements Initializable {
                 }
             }
         };
-
         comboStartTime.setCellFactory(timeFactory);
         comboStartTime.setButtonCell(timeFactory.call(null));
         comboEndTime.setCellFactory(timeFactory);
         comboEndTime.setButtonCell(timeFactory.call(null));
 
-    }
-
-
-    public ZonedDateTime orgToLocal(LocalDate ld, LocalTime lt) {
-        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-        ZoneId orgZoneId = ZoneId.of("America/New_York");
-        ZonedDateTime orgZDT = ZonedDateTime.of(ld,lt,orgZoneId);
-        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(localZoneId);
-        return localZDT;
-    }
-
-    public ZonedDateTime orgToLocal(LocalDateTime lt) {
-        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-        ZoneId orgZoneId = ZoneId.of("America/New_York");
-        ZonedDateTime orgZDT = ZonedDateTime.of(lt,orgZoneId);
-        ZonedDateTime localZDT =  orgZDT.withZoneSameInstant(localZoneId);
-        return localZDT;
-    }
-
-    public ZonedDateTime localToOrg(LocalDateTime lt) {
-        ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-        ZoneId orgZoneId = ZoneId.of("America/New_York");
-        ZonedDateTime localZDT = ZonedDateTime.of(lt,localZoneId);
-        ZonedDateTime orgZDT =  localZDT.withZoneSameInstant(orgZoneId);
-        return orgZDT;
     }
 
     /**
