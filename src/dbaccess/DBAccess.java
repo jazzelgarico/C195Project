@@ -267,12 +267,11 @@ public class DBAccess {
         return list;
     }
 
-    public static boolean addAppointment(Appointment appointment) {
+    public static void addAppointment(Appointment appointment) {
         String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
                 " 'script', ?, ?, ?);";
-        boolean updateSuccess = false;
         try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,appointment.getTitle());
             ps.setString(2, appointment.getDescription());
             ps.setString(3,appointment.getLocation());
@@ -282,37 +281,34 @@ public class DBAccess {
             ps.setInt(7,appointment.getCustomerId());
             ps.setInt(8,appointment.getUserId());
             ps.setInt(9,appointment.getContactId());
-            updateSuccess = ps.execute();
+            boolean updateSuccess = ps.execute();
 
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return updateSuccess;
     }
 
-    public static boolean editAppointment(Appointment appointment) {
-        int appointmentID = appointment.getAppointmentId();;
+    public static void editAppointment(Appointment appointment) {
+        int appointmentID = appointment.getAppointmentId();
         String query = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?," +
                 "Last_Update=NOW(), Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID=" + appointmentID +
                 ";";
-        boolean updateSuccess = false;
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ps.setString(1,appointment.getTitle());
+            ps.setString(1, appointment.getTitle());
             ps.setString(2, appointment.getDescription());
-            ps.setString(3,appointment.getLocation());
+            ps.setString(3, appointment.getLocation());
             ps.setString(4, appointment.getType());
             ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-            ps.setTimestamp(6,Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
-            ps.setInt(7,appointment.getCustomerId());
-            ps.setInt(8,appointment.getUserId());
-            ps.setInt(9,appointment.getContactId());
-            updateSuccess = ps.execute();
+            ps.setTimestamp(6, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+            ps.setInt(7, appointment.getCustomerId());
+            ps.setInt(8, appointment.getUserId());
+            ps.setInt(9, appointment.getContactId());
+            boolean updateSuccess = ps.execute();
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return updateSuccess;
     }
 
 }
