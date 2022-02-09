@@ -2,6 +2,7 @@ package controller;
 
 import dbaccess.DBAccess;
 
+import dbaccess.DBAppointment;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,10 +13,8 @@ import model.*;
 
 import java.net.URL;
 import java.time.*;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 
 public class MainController implements Initializable {
 
@@ -213,7 +212,7 @@ public class MainController implements Initializable {
             }
         };
 
-        tblViewAppointment.setItems(DBAccess.addAllAppointments());
+        tblViewAppointment.setItems(DBAppointment.addAll());
         // Fills table columns
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -362,7 +361,7 @@ public class MainController implements Initializable {
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
         Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
-        DBAccess.deleteAppointment(appointment);
+        DBAppointment.delete(appointment);
         updateAppointmentTable();
     }
 
@@ -412,13 +411,13 @@ public class MainController implements Initializable {
                 customerId, userId);
         if (txtFldAppID.getText().isEmpty()) {
             // Create New Appointment
-            DBAccess.addAppointment(appointment);
+            DBAppointment.add(appointment);
         }
         else {
             // Edit Existing Appointment
             int appointmentId = Integer.parseInt(txtFldAppID.getText());
             appointment.setAppointmentId(appointmentId);
-            DBAccess.editAppointment(appointment);
+            DBAppointment.edit(appointment);
         }
         updateAppointmentTable();
     }
