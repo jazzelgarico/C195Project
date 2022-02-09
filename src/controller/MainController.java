@@ -4,6 +4,7 @@ import dbaccess.DBAccess;
 
 import dbaccess.DBAppointment;
 import dbaccess.DBCustomer;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,11 +13,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import model.*;
-
 import java.net.URL;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
 
@@ -175,7 +177,7 @@ public class MainController implements Initializable {
     /**
      * Updates Customer Table View from Customers in the database.
      */
-    private void updateCustomerTable() {
+    public void updateCustomerTable() {
         tblViewCustomer.setItems(DBCustomer.addAll());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -187,11 +189,15 @@ public class MainController implements Initializable {
     /**
      * Updates Appointments Table View from Appointments in the database.
      */
-    private void updateAppointmentTable() {
-        updateAppointmentTable(DBAppointment.addAll());
+    public void updateAppointmentTable() {
+        if (radioBtnMonth.isSelected()){
+            viewMonth();
+        } else if (radioBtnWeek.isSelected()){
+            viewWeek();
+        }
     }
 
-    private void updateAppointmentTable(ObservableList<Appointment> list) {
+    public void updateAppointmentTable(ObservableList<Appointment> list) {
         Callback<TableColumn<Appointment,LocalDate>,TableCell<Appointment,LocalDate>> dateFactory =
                 localDateTimeTableColumn -> new TableCell<Appointment,LocalDate>() {
                     @Override
@@ -459,14 +465,32 @@ public class MainController implements Initializable {
         comboEndTime.setButtonCell(timeFactory.call(null));
     }
 
+    public void viewMonth() {
+        Month thisMonth = LocalDateTime.now().getMonth();
+        int thisYear = LocalDateTime.now().getYear();
+        updateAppointmentTable(DBAppointment.addAll().stream()
+                .filter(a -> a.getAppointmentDate().getMonth() == thisMonth &&
+                        a.getAppointmentDate().getYear() == thisYear)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+    }
+
+    public void viewWeek() {
+        LocalDateTime weekEnd = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
+        LocalDateTime weekStart = weekEnd.minusDays(6);
+        updateAppointmentTable(DBAppointment.addAll().stream()
+                .filter(a -> a.getStartTime().isBefore(weekEnd) &&
+                        a.getStartTime().isAfter(weekStart))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+    }
+
     @FXML
     void onActionMonthRadio(ActionEvent event) {
-
+        viewMonth();
     }
 
     @FXML
     void onActionWeekRadio(ActionEvent event) {
-
+        viewWeek();
     }
 
     /**
