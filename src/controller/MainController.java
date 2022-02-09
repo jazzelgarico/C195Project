@@ -285,7 +285,6 @@ public class MainController implements Initializable {
         txtFldPostalCode.setText(postalCode);
         comboFirstLevelDiv.setValue(division);
         comboCountry.setValue(country);
-
     }
 
     /**
@@ -325,7 +324,6 @@ public class MainController implements Initializable {
                 Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
                 DBAccess.editCustomer(customer);
             }
-
             updateCustomerTable();
             clearCustomerForm();
         }
@@ -425,14 +423,12 @@ public class MainController implements Initializable {
         updateAppointmentTable();
     }
 
-
-
     @FXML
     void onActionDatePicker(ActionEvent event) {
         LocalDate ld = datePicker.getValue();
         LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
         LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
-
+        // Fill in comboStartTime and comboEndTime
         while (localStart.isBefore(localEnd)) {
             comboStartTime.getItems().add(localStart);
             comboEndTime.getItems().add(localStart.plusMinutes(15));
@@ -450,11 +446,20 @@ public class MainController implements Initializable {
                 }
             }
         };
-        //Format combo list
+        // Format combo list
         comboStartTime.setCellFactory(timeFactory);
         comboStartTime.setButtonCell(timeFactory.call(null));
         comboEndTime.setCellFactory(timeFactory);
         comboEndTime.setButtonCell(timeFactory.call(null));
+    }
+
+    @FXML
+    void onActionMonthRadio(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionWeekRadio(ActionEvent event) {
 
     }
 
