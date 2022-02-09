@@ -4,6 +4,7 @@ import dbaccess.DBAccess;
 
 import dbaccess.DBAppointment;
 import dbaccess.DBCustomer;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -187,6 +188,10 @@ public class MainController implements Initializable {
      * Updates Appointments Table View from Appointments in the database.
      */
     private void updateAppointmentTable() {
+        updateAppointmentTable(DBAppointment.addAll());
+    }
+
+    private void updateAppointmentTable(ObservableList<Appointment> list) {
         Callback<TableColumn<Appointment,LocalDate>,TableCell<Appointment,LocalDate>> dateFactory =
                 localDateTimeTableColumn -> new TableCell<Appointment,LocalDate>() {
                     @Override
@@ -202,18 +207,18 @@ public class MainController implements Initializable {
 
         Callback<TableColumn<Appointment,LocalDateTime>,TableCell<Appointment,LocalDateTime>> timeFactory =
                 localDateTimeTableColumn -> new TableCell<Appointment,LocalDateTime>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item,empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
-                }
-            }
-        };
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item,empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
+                        }
+                    }
+                };
 
-        tblViewAppointment.setItems(DBAppointment.addAll());
+        tblViewAppointment.setItems(list);
         // Fills table columns
         colAppID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -230,6 +235,7 @@ public class MainController implements Initializable {
         colDate.setCellFactory(dateFactory);
         colEnd.setCellFactory(timeFactory);
         colStart.setCellFactory(timeFactory);
+
     }
 
     /**
