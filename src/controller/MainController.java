@@ -3,6 +3,7 @@ package controller;
 import dbaccess.DBAccess;
 
 import dbaccess.DBAppointment;
+import dbaccess.DBCustomer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -174,7 +175,7 @@ public class MainController implements Initializable {
      * Updates Customer Table View from Customers in the database.
      */
     private void updateCustomerTable() {
-        tblViewCustomer.setItems(DBAccess.addDBCustomers());
+        tblViewCustomer.setItems(DBCustomer.addAll());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -242,7 +243,7 @@ public class MainController implements Initializable {
     @FXML
     void onActionCustomerDelete(ActionEvent event) {
         int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
-        int appointmentsDeleted = DBAccess.deleteCustomer(customerId);
+        int appointmentsDeleted = DBCustomer.delete(customerId);
         // Update Table Views
         updateCustomerTable();
         updateAppointmentTable();
@@ -316,12 +317,12 @@ public class MainController implements Initializable {
             if (txtFldCustomerIDCustomer.getText().isEmpty()) {
                 //Adds new customer
                 Customer customer = new Customer(customerName, address, postalCode, phoneNumber, divisionID);
-                DBAccess.addCustomer(customer);
+                DBCustomer.add(customer);
             } else {
                 //Edits existing customer
                 int customerId = Integer.parseInt(txtFldCustomerIDCustomer.getText());
                 Customer customer = new Customer(customerId, customerName, address, postalCode, phoneNumber, divisionID);
-                DBAccess.editCustomer(customer);
+                DBCustomer.edit(customer);
             }
             updateCustomerTable();
             clearCustomerForm();
