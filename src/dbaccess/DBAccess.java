@@ -220,13 +220,20 @@ public class DBAccess {
     /**
      * Deletes the appointment matching the given appointmentId from the database.
      *
-     * @param apptId apptID of appointment to delete
+     * @param appointment appointment to delete
      */
-    public static void deleteAppointment(int apptId) {
-        String query =  "DELETE FROM appointments WHERE Appointment_ID=" + apptId;
+    public static void deleteAppointment(Appointment appointment) {
+        int appointmentId = appointment.getAppointmentId();
+        String type = appointment.getType();
+        String query =  "DELETE FROM appointments WHERE Appointment_ID=" + appointmentId;
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ps.execute();
+            // Alert
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Deletion successful.");
+            alert.setContentText("Appointment " + appointmentId + " for " + type + " has been deleted.");
+            alert.showAndWait();
         } catch (SQLException e) { e.printStackTrace(); };
     }
 
@@ -281,7 +288,14 @@ public class DBAccess {
             ps.setInt(7,appointment.getCustomerId());
             ps.setInt(8,appointment.getUserId());
             ps.setInt(9,appointment.getContactId());
-            boolean updateSuccess = ps.execute();
+            int appointmentId = ps.executeUpdate();
+            // Alert
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Appointment Creation");
+            alert.setHeaderText("Successfully created.");
+            alert.setContentText("Appointment " + appointmentId + " for " + appointment.getType() + "" +
+                    " has been created.");
+            alert.showAndWait();
 
         } catch (SQLException e){
             e.printStackTrace();
@@ -305,6 +319,13 @@ public class DBAccess {
             ps.setInt(8, appointment.getUserId());
             ps.setInt(9, appointment.getContactId());
             boolean updateSuccess = ps.execute();
+            if (updateSuccess) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Edit");
+                alert.setHeaderText("Successfully updated.");
+                alert.setContentText("Appointment " + appointmentID + " for " + appointment.getType() +
+                        " has been updated.");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
