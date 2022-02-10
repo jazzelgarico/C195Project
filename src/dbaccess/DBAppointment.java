@@ -10,6 +10,7 @@ import model.Appointment;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DBAppointment {
     public static ObservableList<Appointment> addAll() {
@@ -168,4 +169,49 @@ public class DBAppointment {
         System.out.println("Conflict: " + conflict);
         return conflict;
     }
+
+    /**
+     * Triggers an alert displaying if there is an appointment within 15 minutes of the user's login. If there is an
+     * appointment within 15 minutes, the alert informs the user of the appointment ID, date, and time. If there is no
+     * appointment within 15 minutes, the alert informs the user that there are no upcoming appointments.
+     */
+    public static void checkUpcoming() {
+        LocalDateTime loginTime = TimeHelper.clientToServerTime(LocalDateTime.now());
+        LocalDateTime loginTimePlus15 = loginTime.plusMinutes(15);
+        String loginTimeFormat =  loginTime.format(DateTimeFormatter.ofPattern("yyyy-M-dd H:mm:ss"));
+        String loginTimePlus15Format =  loginTimePlus15.format(DateTimeFormatter.ofPattern("yyyy-M-dd H:mm:ss"));
+        String query = "SELECT Appointment_ID, Start FROM appointments WHERE Start<'" +loginTimePlus15Format +
+                "' AND Start>'" + loginTimeFormat + "';";
+        System.out.println(query);
+        String appointmentInfo = "";
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int appointmentId = rs.getInt("Appointment_ID");
+                LocalDateTime start = TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
+                String startFormat = start.format(DateTimeFormatter.ofPattern("h:mma"));
+                LocalDate appointmentDate = start.toLocalDate();
+                String dateFormat = appointmentDate.format(DateTimeFormatter.ofPattern("M/d/yyyy"));
+                appointmentInfo = appointmentInfo + "\nAppointment ID " + appointmentId + " on " + dateFormat + " at " +
+                        startFormat + ".";
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Upcoming Appointments");
+        if (appointmentInfo == "") {
+            alert.setHeaderText("No upcoming appointments.");
+            alert.setContentText("There are no upcoming appointments.");
+        }
+        else {
+            alert.setHeaderText("Upcoming appointments");
+            alert.setContentText("These are your upcoming appointment(s): " + appointmentInfo);
+        }
+        alert.showAndWait();
+    }
+
+
 }
