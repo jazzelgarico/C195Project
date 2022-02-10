@@ -244,7 +244,6 @@ public class MainController implements Initializable {
         colDate.setCellFactory(dateFactory);
         colEnd.setCellFactory(timeFactory);
         colStart.setCellFactory(timeFactory);
-
     }
 
     /**
@@ -438,7 +437,6 @@ public class MainController implements Initializable {
         updateAppointmentTable();
     }
 
-
     @FXML
     void onActionClearAppointment(ActionEvent event) {
         clearAppointmentForm();
@@ -464,7 +462,6 @@ public class MainController implements Initializable {
         clearCustomerForm();
     }
 
-
     @FXML
     void onActionDatePicker(ActionEvent event) {
         if (datePicker.getValue() != null) {
@@ -472,11 +469,15 @@ public class MainController implements Initializable {
             LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
             LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
             // Fill in comboStartTime and comboEndTime
+            ObservableList<LocalDateTime> startList = FXCollections.observableArrayList();
+            ObservableList<LocalDateTime> endList = FXCollections.observableArrayList();
             while (localStart.isBefore(localEnd)) {
-                comboStartTime.getItems().add(localStart);
-                comboEndTime.getItems().add(localStart.plusMinutes(15));
+                startList.add(localStart);
+                endList.add(localStart.plusMinutes(15));
                 localStart = localStart.plusMinutes(15);
             }
+            comboStartTime.setItems(startList);
+            comboEndTime.setItems(endList);
             //Cell factory for start time and end time combo boxes
             Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
                 @Override
@@ -527,31 +528,33 @@ public class MainController implements Initializable {
 
     @FXML
     void onActionStartTime(ActionEvent event) {
-        final LocalDate APPOINTMENT_DATE = datePicker.getValue();
-        final LocalDateTime CLOSE_TIME = TimeHelper.getTimeClose(APPOINTMENT_DATE);
-        LocalDateTime localStart = comboStartTime.getValue();
+        if (comboStartTime.getValue() != null) {
+            final LocalDate APPOINTMENT_DATE = datePicker.getValue();
+            final LocalDateTime CLOSE_TIME = TimeHelper.getTimeClose(APPOINTMENT_DATE);
+            LocalDateTime localStart = comboStartTime.getValue();
 
-        ObservableList<LocalDateTime> endList = FXCollections.observableArrayList();
-        while (localStart.isBefore(CLOSE_TIME)) {
-            endList.add(localStart.plusMinutes(15));
-            localStart = localStart.plusMinutes(15);
-        }
-        comboEndTime.setItems(endList);
-        //Cell factory for start time and end time combo boxes
-        Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                } else {
-                    setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
-                }
+            ObservableList<LocalDateTime> endList = FXCollections.observableArrayList();
+            while (localStart.isBefore(CLOSE_TIME)) {
+                endList.add(localStart.plusMinutes(15));
+                localStart = localStart.plusMinutes(15);
             }
-        };
-        // Format combo list
-        comboEndTime.setCellFactory(timeFactory);
-        comboEndTime.setButtonCell(timeFactory.call(null));
+            comboEndTime.setItems(endList);
+            //Cell factory for start time and end time combo boxes
+            Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
+                    }
+                }
+            };
+            // Format combo list
+            comboEndTime.setCellFactory(timeFactory);
+            comboEndTime.setButtonCell(timeFactory.call(null));
+        }
     }
 
     /**
