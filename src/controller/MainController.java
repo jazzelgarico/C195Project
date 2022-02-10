@@ -1,7 +1,6 @@
 package controller;
 
 import dbaccess.DBAccess;
-
 import dbaccess.DBAppointment;
 import dbaccess.DBCustomer;
 import javafx.collections.FXCollections;
@@ -36,7 +35,6 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btnClearCustomer;
-
 
     // Table View Customer
     @FXML
@@ -563,6 +561,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        DBAppointment.checkUpcoming();
         updateCustomerTable();
         updateAppointmentTable();
         comboCountry.setItems(DBAccess.getCountries());
