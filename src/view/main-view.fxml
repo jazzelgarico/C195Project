@@ -172,7 +172,7 @@
                                     <ComboBox fx:id="comboContact" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                      <TextField fx:id="txtFldType" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                     <ComboBox fx:id="comboStartTime" onAction="#onActionStartTime" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                                    <ComboBox fx:id="comboEndTime" onAction="#onActionEndTime" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                    <ComboBox fx:id="comboEndTime" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                     <TextField fx:id="txtFldCustomerIDApp" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                      <TextField fx:id="txtFldUserID" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                     <DatePicker fx:id="datePicker" onAction="#onActionDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="6" />
