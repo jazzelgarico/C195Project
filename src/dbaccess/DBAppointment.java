@@ -1,5 +1,6 @@
 package dbaccess;
 
+import controller.MainController;
 import controller.TimeHelper;
 import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
@@ -66,30 +67,38 @@ public class DBAppointment {
      * @param appointment
      */
     public static void add(Appointment appointment) {
-        String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
-                " 'script', ?, ?, ?);";
-        try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1,appointment.getTitle());
-            ps.setString(2, appointment.getDescription());
-            ps.setString(3,appointment.getLocation());
-            ps.setString(4, appointment.getType());
-            ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-            ps.setTimestamp(6,Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
-            ps.setInt(7,appointment.getCustomerId());
-            ps.setInt(8,appointment.getUserId());
-            ps.setInt(9,appointment.getContactId());
-            int appointmentId = ps.executeUpdate();
-            // Alert
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Appointment Creation");
-            alert.setHeaderText("Successfully created.");
-            alert.setContentText("Appointment " + appointmentId + " for " + appointment.getType() + "" +
-                    " has been created.");
+        if (checkConflict(appointment)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Appointment conflict.");
+            alert.setContentText("Customer has an existing appointment which conflicts with this appointment's" +
+                    " start and end time.");
             alert.showAndWait();
+        } else {
+            String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
+                    " 'script', ?, ?, ?);";
+            try {
+                PreparedStatement ps = DBConnection.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1,appointment.getTitle());
+                ps.setString(2, appointment.getDescription());
+                ps.setString(3,appointment.getLocation());
+                ps.setString(4, appointment.getType());
+                ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
+                ps.setTimestamp(6,Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setInt(7,appointment.getCustomerId());
+                ps.setInt(8,appointment.getUserId());
+                ps.setInt(9,appointment.getContactId());
+                int appointmentId = ps.executeUpdate();
+                // Alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Creation");
+                alert.setHeaderText("Successfully created.");
+                alert.setContentText("Appointment " + appointmentId + " for " + appointment.getType() + "" +
+                        " has been created.");
+                alert.showAndWait();
 
-        } catch (SQLException e){
-            e.printStackTrace();
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -98,31 +107,65 @@ public class DBAppointment {
      * @param appointment
      */
     public static void edit(Appointment appointment) {
-        int appointmentID = appointment.getAppointmentId();
-        String query = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?," +
-                "Last_Update=NOW(), Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID=" + appointmentID +
-                ";";
+        if (checkConflict(appointment)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Appointment conflict.");
+            alert.setContentText("Customer has an existing appointment which conflicts with this appointment's" +
+                    " start and end time.");
+            alert.showAndWait();
+        } else {
+            int appointmentID = appointment.getAppointmentId();
+            String query = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?," +
+                    "Last_Update=NOW(), Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID=" + appointmentID +
+                    ";";
+            try {
+                PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+                ps.setString(1, appointment.getTitle());
+                ps.setString(2, appointment.getDescription());
+                ps.setString(3, appointment.getLocation());
+                ps.setString(4, appointment.getType());
+                ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
+                ps.setTimestamp(6, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setInt(7, appointment.getCustomerId());
+                ps.setInt(8, appointment.getUserId());
+                ps.setInt(9, appointment.getContactId());
+                boolean updateSuccess = ps.execute();
+                if (updateSuccess) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Appointment Edit");
+                    alert.setHeaderText("Successfully updated.");
+                    alert.setContentText("Appointment " + appointmentID + " for " + appointment.getType() +
+                            " has been updated.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private static boolean checkConflict(Appointment appointment) {
+        boolean conflict = true;
+        int customerId = appointment.getCustomerId();
+        int appointmentId = appointment.getAppointmentId();
+        Timestamp start = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime()));
+        Timestamp end = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime()));
+
+        String queryStart = "SELECT COUNT(*) from appointments WHERE ";
+        String condition1 = "Customer_ID=" + customerId + " AND Appointment_ID<>" + appointmentId;
+        String condition2 = "(Start>='" + start + "' AND Start<'" + end + "')";
+        String condition3 = "(End>'" + start + "' AND Start<'" + end + "')";
+        String query = queryStart + condition1 + " AND (" + condition2 + " OR " + condition3 + ")";
+        System.out.println(query);
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ps.setString(1, appointment.getTitle());
-            ps.setString(2, appointment.getDescription());
-            ps.setString(3, appointment.getLocation());
-            ps.setString(4, appointment.getType());
-            ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-            ps.setTimestamp(6, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
-            ps.setInt(7, appointment.getCustomerId());
-            ps.setInt(8, appointment.getUserId());
-            ps.setInt(9, appointment.getContactId());
-            boolean updateSuccess = ps.execute();
-            if (updateSuccess) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Appointment Edit");
-                alert.setHeaderText("Successfully updated.");
-                alert.setContentText("Appointment " + appointmentID + " for " + appointment.getType() +
-                        " has been updated.");
-            }
-        } catch (SQLException e) {
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt("COUNT(*)");
+            if (count==0) {conflict = false;}
+
+        } catch (SQLException e){
             e.printStackTrace();
         }
+        System.out.println("Conflict: " + conflict);
+        return conflict;
     }
 }
