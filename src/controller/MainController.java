@@ -34,6 +34,10 @@ public class MainController implements Initializable {
     @FXML
     private Button btnSaveCustomer;
 
+    @FXML
+    private Button btnClearCustomer;
+
+
     // Table View Customer
     @FXML
     private TableView<Customer> tblViewCustomer;
@@ -101,6 +105,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btnSaveAppointment;
+
+    @FXML
+    private Button btnClearAppointment;
 
     // TableView Appointment
     @FXML
@@ -435,34 +442,63 @@ public class MainController implements Initializable {
         updateAppointmentTable();
     }
 
+
+    @FXML
+    void onActionClearAppointment(ActionEvent event) {
+        clearAppointmentForm();
+    }
+
+   @FXML
+   public void clearAppointmentForm(){
+        txtFldAppID.clear();
+        txtFldTitle.clear();
+        txtFldDesc.clear();
+        txtFldLocation.clear();
+        comboContact.setValue(null);
+        txtFldType.clear();
+        datePicker.setValue(null);
+        comboStartTime.setValue(null);
+        comboEndTime.setValue(null);
+        txtFldCustomerIDApp.clear();
+        txtFldUserID.clear();
+   }
+
+    @FXML
+    void onActionClearCustomer(ActionEvent event) {
+        clearCustomerForm();
+    }
+
+
     @FXML
     void onActionDatePicker(ActionEvent event) {
-        LocalDate ld = datePicker.getValue();
-        LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
-        LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
-        // Fill in comboStartTime and comboEndTime
-        while (localStart.isBefore(localEnd)) {
-            comboStartTime.getItems().add(localStart);
-            comboEndTime.getItems().add(localStart.plusMinutes(15));
-            localStart = localStart.plusMinutes(15);
-        }
-        //Cell factory for start time and end time combo boxes
-        Callback<ListView<LocalDateTime>,ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                } else {
-                    setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
-                }
+        if (datePicker.getValue() != null) {
+            LocalDate ld = datePicker.getValue();
+            LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
+            LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
+            // Fill in comboStartTime and comboEndTime
+            while (localStart.isBefore(localEnd)) {
+                comboStartTime.getItems().add(localStart);
+                comboEndTime.getItems().add(localStart.plusMinutes(15));
+                localStart = localStart.plusMinutes(15);
             }
-        };
-        // Format combo list
-        comboStartTime.setCellFactory(timeFactory);
-        comboStartTime.setButtonCell(timeFactory.call(null));
-        comboEndTime.setCellFactory(timeFactory);
-        comboEndTime.setButtonCell(timeFactory.call(null));
+            //Cell factory for start time and end time combo boxes
+            Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                    } else {
+                        setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
+                    }
+                }
+            };
+            // Format combo list
+            comboStartTime.setCellFactory(timeFactory);
+            comboStartTime.setButtonCell(timeFactory.call(null));
+            comboEndTime.setCellFactory(timeFactory);
+            comboEndTime.setButtonCell(timeFactory.call(null));
+        }
     }
 
     public void viewMonth() {
@@ -491,6 +527,44 @@ public class MainController implements Initializable {
     @FXML
     void onActionWeekRadio(ActionEvent event) {
         viewWeek();
+    }
+
+    @FXML
+    void onActionStartTime(ActionEvent event) {
+        if (comboStartTime.getValue() != null) {
+            LocalDate ld = datePicker.getValue();
+            LocalDateTime localStart = comboStartTime.getValue();
+            LocalDateTime localClose = TimeHelper.getTimeClose(ld);
+            final LocalDateTime localEnd = comboEndTime.getValue();
+
+            if (localEnd == null || localEnd.isAfter(comboStartTime.getValue())) {
+                comboEndTime.getItems().clear();
+
+                while (localStart.isBefore(localClose)) {
+                    comboEndTime.getItems().add(localStart.plusMinutes(15));
+                    localStart = localStart.plusMinutes(15);
+                }
+                //Cell factory for start time and end time combo boxes
+                Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
+                        }
+                    }
+                };
+                // Format combo list
+                comboEndTime.setCellFactory(timeFactory);
+                comboEndTime.setButtonCell(timeFactory.call(null));
+                comboEndTime.setValue(localEnd);
+            }
+        }
+    }
+    @FXML
+    void onActionEndTime(ActionEvent event){
     }
 
     /**
