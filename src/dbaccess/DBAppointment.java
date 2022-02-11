@@ -155,7 +155,6 @@ public class DBAppointment {
         String condition2 = "(Start>='" + start + "' AND Start<'" + end + "')";
         String condition3 = "(End>'" + start + "' AND Start<'" + end + "')";
         String query = queryStart + condition1 + " AND (" + condition2 + " OR " + condition3 + ")";
-        System.out.println(query);
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -166,7 +165,6 @@ public class DBAppointment {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        System.out.println("Conflict: " + conflict);
         return conflict;
     }
 
@@ -182,7 +180,6 @@ public class DBAppointment {
         String loginTimePlus15Format =  loginTimePlus15.format(DateTimeFormatter.ofPattern("yyyy-M-dd H:mm:ss"));
         String query = "SELECT Appointment_ID, Start FROM appointments WHERE Start<'" +loginTimePlus15Format +
                 "' AND Start>'" + loginTimeFormat + "';";
-        System.out.println(query);
         String appointmentInfo = "";
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);

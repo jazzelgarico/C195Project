@@ -76,7 +76,6 @@ public class CustomerController implements Initializable {
      * Updates Customer Table View from Customers in the database.
      */
     public void updateCustomerTable() {
-        CustomerList.get().stream().forEach(System.out::println);
         tblViewCustomer.setItems(CustomerList.get());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
