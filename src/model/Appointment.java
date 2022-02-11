@@ -1,8 +1,8 @@
 package model;
 
+import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Appointment {
     private int appointmentId;
@@ -16,6 +16,7 @@ public class Appointment {
     private LocalDateTime endTime;
     private int customerId;
     private int userId;
+    private static ObservableList<Appointment> list;
 
     /**
      * Constructor for Appointment without appointmentId
@@ -273,6 +274,14 @@ public class Appointment {
      */
     public void getUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void addAppointment(Appointment appointment){
+        list.add(appointment);
+    }
+
+    public ObservableList<Appointment> getList(){
+        return list;
     }
 
 

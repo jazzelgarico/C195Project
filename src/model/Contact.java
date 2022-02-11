@@ -9,7 +9,6 @@ public class Contact {
     private int contactId;
     private String contactName;
     private String emailAddress;
-
     /**
      * No-args constructor for Contact
      */

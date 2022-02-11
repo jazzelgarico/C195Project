@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.Customer;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +12,7 @@ import java.sql.Statement;
 
 public class DBCustomer {
 
-    public static ObservableList<Customer> addAll() {
-        ObservableList<Customer> list = FXCollections.observableArrayList();
+    public static void addAll() {
         try {
             String query = "SELECT Customer_ID,Customer_Name,Address,Postal_Code,Phone,Division_ID FROM customers";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
@@ -30,10 +28,9 @@ public class DBCustomer {
                 //Create new Customer
                 Customer customer = new Customer(customerID,customerName,address,postalCode,phone,divisionID);
                 //Add customer to list
-                list.add(customer);
+                Customer.addCustomer(customer);
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return list;
     }
 
     public static void add(Customer customer) {
@@ -50,7 +47,13 @@ public class DBCustomer {
             ps.setString(3,postalCode);
             ps.setString(4,phone);
             ps.setInt(5,divisionId);
-            ps.execute();
+            if (ps.executeUpdate() == 1) {
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                int id = rs.getInt(1);
+                customer.setCustomerId(id);
+                Customer.addCustomer(customer);
+            }
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
@@ -67,8 +70,9 @@ public class DBCustomer {
             ps.setString(4, customer.getPhoneNumber());
             ps.setInt(5,customer.getDivisionId());
 
-            Boolean updateSuccess = ps.execute();
-            if (updateSuccess) {
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 1) {
+                Customer.editCustomer(customer);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Update successful.");
                 alert.setContentText("Customer with ID number " + id + " has been updated.");

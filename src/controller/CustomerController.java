@@ -75,7 +75,8 @@ public class CustomerController implements Initializable {
      * Updates Customer Table View from Customers in the database.
      */
     public void updateCustomerTable() {
-        tblViewCustomer.setItems(DBCustomer.addAll());
+        Customer.getList().stream().forEach(System.out::println);
+        tblViewCustomer.setItems(Customer.getList());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -117,7 +118,6 @@ public class CustomerController implements Initializable {
      */
     @FXML
     void onActionEditCustomer(ActionEvent event) {
-        System.out.println(event.getEventType().toString());
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
         int id = customer.getCustomerId();
         String name = customer.getCustomerName();
@@ -216,6 +216,7 @@ public class CustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        DBCustomer.addAll();
         comboCountry.setItems(DBAccess.getCountries());
         updateCustomerTable();
     }
