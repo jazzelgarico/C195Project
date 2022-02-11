@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable{
@@ -39,12 +38,12 @@ public class LoginController implements Initializable{
     @FXML
     private TextField txtFldUserName;
 
-    @FXML
     /**
      * Takes username and password, validates login credentials, and opens main view if credentials are valid.
      *
      * @param event which triggers login attempt
      */
+    @FXML
     public void btnLoginOnClick(ActionEvent event) {
         //Get Login Credentials
         String username = txtFldUserName.getText();
