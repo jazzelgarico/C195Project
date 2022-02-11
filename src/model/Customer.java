@@ -1,11 +1,5 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  *
  * @author Jazzme Nadine N. Elgarico
@@ -18,7 +12,6 @@ public class Customer {
     private String postalCode;
     private String phoneNumber;
     private int divisionId;
-    private static ObservableList<Customer> list = FXCollections.observableArrayList();
 
     /**
      * No-args constructor for Customer
@@ -150,31 +143,6 @@ public class Customer {
      * @param divisionId the divisionId to set
      */
     public void setDivisionId(int divisionId) { this.divisionId = divisionId;}
-
-    public static void addCustomer(Customer customer){
-        list.add(customer);
-    }
-
-    public static void editCustomer(Customer customer){
-        System.out.println("Customer ID to edit: " + customer.getCustomerId());
-        Optional<Customer> oldCustomer = list.stream()
-                .filter(c -> c.getCustomerId() == customer.getCustomerId())
-                        .findAny();
-        if (oldCustomer.isEmpty()) {
-        } else {
-            System.out.println(oldCustomer.get());
-            System.out.println(list.indexOf(oldCustomer.get()));
-            list.set(list.indexOf(oldCustomer.get()),customer);
-        }
-    }
-
-    public static void removeCustomer(Customer customer){
-        list.remove(customer);
-    }
-
-    public static ObservableList<Customer> getList(){
-        return list;
-    }
 
     @Override
     public String toString() {
