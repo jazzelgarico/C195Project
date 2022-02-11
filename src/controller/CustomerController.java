@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Country;
 import model.Customer;
+import model.CustomerList;
 import model.FirstLevelDivision;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -75,8 +76,8 @@ public class CustomerController implements Initializable {
      * Updates Customer Table View from Customers in the database.
      */
     public void updateCustomerTable() {
-        Customer.getList().stream().forEach(System.out::println);
-        tblViewCustomer.setItems(Customer.getList());
+        CustomerList.get().stream().forEach(System.out::println);
+        tblViewCustomer.setItems(CustomerList.get());
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
