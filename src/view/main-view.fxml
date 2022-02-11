@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -9,15 +8,7 @@
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1080.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
       <fx:include fx:id="tabCustomer" source="customer-view.fxml" />
-      <fx:include fx:id="tabAppointment" source ="appointment-view.fxml" />
-      <Tab text="Reports">
-         <content>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <ComboBox prefWidth="150.0" />
-               </children>
-            </VBox>
-         </content>
-      </Tab>
+      <fx:include fx:id="tabAppointment" source="appointment-view.fxml" />
+      <fx:include fx:id="tabReports" source="reports-view.fxml" />
   </tabs>
 </TabPane>

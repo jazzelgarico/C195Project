@@ -16,10 +16,16 @@ public class MainController implements Initializable {
     private AppointmentController tabAppointmentController;
 
     @FXML
+    private ReportController tabReportController;
+
+    @FXML
     private Tab tabCustomer;
 
     @FXML
     private Tab tabAppointment;
+
+    @FXML
+    private Tab tabReports;
 
     /**
      * On initialize, updates Customer TableView, Appointment TableView, and country combo box
@@ -28,6 +34,10 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         DBAppointment.checkUpcoming();
+        tabAppointment.setOnSelectionChanged(e -> {
+            if (tabAppointment.isSelected()) {
+                tabAppointmentController.updateAppointmentTable(); }
+        });
     }
 
 }
