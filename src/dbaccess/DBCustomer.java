@@ -1,10 +1,10 @@
 package dbaccess;
 
 import dbconnection.DBConnection;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.Customer;
+import model.CustomerList;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ public class DBCustomer {
                 //Create new Customer
                 Customer customer = new Customer(customerID,customerName,address,postalCode,phone,divisionID);
                 //Add customer to list
-                Customer.addCustomer(customer);
+                CustomerList.add(customer);
             }
         } catch (SQLException e) { e.printStackTrace(); }
     }
@@ -52,7 +52,7 @@ public class DBCustomer {
                 rs.next();
                 int id = rs.getInt(1);
                 customer.setCustomerId(id);
-                Customer.addCustomer(customer);
+                CustomerList.add(customer);
             }
         } catch (SQLException e) { e.printStackTrace(); }
     }
@@ -72,7 +72,7 @@ public class DBCustomer {
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 1) {
-                Customer.editCustomer(customer);
+                CustomerList.replace(customer);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Update successful.");
                 alert.setContentText("Customer with ID number " + id + " has been updated.");
