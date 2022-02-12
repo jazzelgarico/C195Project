@@ -11,7 +11,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import model.Appointment;
+import model.AppointmentList;
 import model.Contact;
+import utility.TimeFormatCell;
+import utility.TimeHelper;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -23,6 +26,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AppointmentController implements Initializable {
+
+    private static final Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> LIST_TIME_FACTORY =
+            localTimeListView -> new TimeFormatCell();
 
     // Month/Week Toggle
     @FXML
@@ -176,7 +182,23 @@ public class AppointmentController implements Initializable {
         colStart.setCellFactory(timeFactory);
     }
 
+    public void viewMonth() {
+        Month thisMonth = LocalDateTime.now().getMonth();
+        int thisYear = LocalDateTime.now().getYear();
+        updateAppointmentTable(AppointmentList.get().stream()
+                .filter(a -> a.getAppointmentDate().getMonth() == thisMonth &&
+                        a.getAppointmentDate().getYear() == thisYear)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+    }
 
+    public void viewWeek() {
+        LocalDateTime weekEnd = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
+        LocalDateTime weekStart = weekEnd.minusDays(6);
+        updateAppointmentTable(AppointmentList.get().stream()
+                .filter(a -> a.getStartTime().isBefore(weekEnd) &&
+                        a.getStartTime().isAfter(weekStart))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+    }
 
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
@@ -278,42 +300,11 @@ public class AppointmentController implements Initializable {
             }
             comboStartTime.setItems(startList);
             comboEndTime.setItems(endList);
-            //Cell factory for start time and end time combo boxes
-            Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
-                @Override
-                protected void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                    } else {
-                        setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
-                    }
-                }
-            };
-            // Format combo list
-            comboStartTime.setCellFactory(timeFactory);
-            comboStartTime.setButtonCell(timeFactory.call(null));
-            comboEndTime.setCellFactory(timeFactory);
-            comboEndTime.setButtonCell(timeFactory.call(null));
+            comboStartTime.setCellFactory(LIST_TIME_FACTORY);
+            comboStartTime.setButtonCell(LIST_TIME_FACTORY.call(null));
+            comboEndTime.setCellFactory(LIST_TIME_FACTORY);
+            comboEndTime.setButtonCell(LIST_TIME_FACTORY.call(null));
         }
-    }
-
-    public void viewMonth() {
-        Month thisMonth = LocalDateTime.now().getMonth();
-        int thisYear = LocalDateTime.now().getYear();
-        updateAppointmentTable(DBAppointment.addAll().stream()
-                .filter(a -> a.getAppointmentDate().getMonth() == thisMonth &&
-                        a.getAppointmentDate().getYear() == thisYear)
-                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
-    }
-
-    public void viewWeek() {
-        LocalDateTime weekEnd = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
-        LocalDateTime weekStart = weekEnd.minusDays(6);
-        updateAppointmentTable(DBAppointment.addAll().stream()
-                .filter(a -> a.getStartTime().isBefore(weekEnd) &&
-                        a.getStartTime().isAfter(weekStart))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
     }
 
     @FXML
@@ -339,26 +330,14 @@ public class AppointmentController implements Initializable {
                 localStart = localStart.plusMinutes(15);
             }
             comboEndTime.setItems(endList);
-            //Cell factory for start time and end time combo boxes
-            Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> timeFactory = localTimeListView -> new ListCell<LocalDateTime>() {
-                @Override
-                protected void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                    } else {
-                        setText(item.format(DateTimeFormatter.ofPattern("h:mma")));
-                    }
-                }
-            };
-            // Format combo list
-            comboEndTime.setCellFactory(timeFactory);
-            comboEndTime.setButtonCell(timeFactory.call(null));
+            comboEndTime.setCellFactory(LIST_TIME_FACTORY);
+            comboEndTime.setButtonCell(LIST_TIME_FACTORY.call(null));
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        DBAppointment.addAll();
         updateAppointmentTable();
         comboContact.setItems(DBAccess.getAllContacts());
     }
