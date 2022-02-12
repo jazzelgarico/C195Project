@@ -1,7 +1,7 @@
 package dbaccess;
 
 
-import controller.TimeHelper;
+import utility.TimeHelper;
 import dbconnection.DBConnection;
 import javafx.scene.control.Alert;
 import model.Appointment;
@@ -43,35 +43,16 @@ public class DBAppointment {
     }
 
     /**
-     * Deletes the appointment matching the given appointmentId from the database.
-     *
-     * @param appointment appointment to delete
-     */
-    public static void delete(Appointment appointment) {
-        int appointmentId = appointment.getAppointmentId();
-        String type = appointment.getType();
-        String query =  "DELETE FROM appointments WHERE Appointment_ID=" + appointmentId;
-        try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ps.execute();
-            // Alert
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Deletion successful.");
-            alert.setContentText("Appointment " + appointmentId + " for " + type + " has been deleted.");
-            alert.showAndWait();
-        } catch (SQLException e) { e.printStackTrace(); };
-    }
-
-    /**
      *
      * @param appointment
      */
     public static void add(Appointment appointment) {
         if (checkConflict(appointment)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Appointment conflict.");
-            alert.setContentText("Customer has an existing appointment which conflicts with this appointment's" +
-                    " start and end time.");
+            alert.setTitle("Appointment Conflict");
+            alert.setHeaderText("Appointment could not be created.");
+            alert.setContentText("Customer has an existing appointment which conflicts " +
+                    "with this appointment's start and end time.");
             alert.showAndWait();
         } else {
             String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
@@ -90,7 +71,7 @@ public class DBAppointment {
                 ps.setInt(8,appointment.getUserId());
                 ps.setInt(9,appointment.getContactId());
                 ps.execute();
-
+                AppointmentList.add(appointment);
             } catch (SQLException e){
                 e.printStackTrace();
             }
@@ -126,19 +107,36 @@ public class DBAppointment {
                 ps.setInt(7, appointment.getCustomerId());
                 ps.setInt(8, appointment.getUserId());
                 ps.setInt(9, appointment.getContactId());
-                boolean updateSuccess = ps.execute();
-                if (updateSuccess) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Appointment Edit");
-                    alert.setHeaderText("Successfully updated.");
-                    alert.setContentText("Appointment " + appointmentID + " for " + appointment.getType() +
-                            " has been updated.");
-                }
+                ps.execute();
+                AppointmentList.replace(appointment);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    /**
+     * Deletes the appointment matching the given appointmentId from the database.
+     *
+     * @param appointment appointment to delete
+     */
+    public static void delete(Appointment appointment) {
+        int appointmentId = appointment.getAppointmentId();
+        String type = appointment.getType();
+        String query =  "DELETE FROM appointments WHERE Appointment_ID=" + appointmentId;
+        try {
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+            ps.execute();
+            AppointmentList.remove(appointment);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Appointment Deletion");
+            alert.setHeaderText("Deletion successful.");
+            alert.setContentText("Appointment with ID " + appointmentId + " for " + type + " has been deleted.");
+            alert.showAndWait();
+        } catch (SQLException e) { e.printStackTrace(); };
+    }
+
     private static boolean checkConflict(Appointment appointment) {
         boolean conflict = true;
         int customerId = appointment.getCustomerId();
@@ -146,7 +144,7 @@ public class DBAppointment {
         Timestamp start = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime()));
         Timestamp end = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime()));
 
-        String queryStart = "SELECT COUNT(*) from appointments WHERE ";
+        String queryStart = "SELECT COUNT(*) FROM appointments WHERE ";
         String condition1 = "Customer_ID=" + customerId + " AND Appointment_ID<>" + appointmentId;
         String condition2 = "(Start>='" + start + "' AND Start<'" + end + "')";
         String condition3 = "(End>'" + start + "' AND Start<'" + end + "')";
@@ -156,8 +154,9 @@ public class DBAppointment {
             ResultSet rs = ps.executeQuery();
             rs.next();
             int count = rs.getInt("COUNT(*)");
-            if (count==0) {conflict = false;}
-
+            if (count==0) {
+                conflict = false;
+            }
         } catch (SQLException e){
             e.printStackTrace();
         }
