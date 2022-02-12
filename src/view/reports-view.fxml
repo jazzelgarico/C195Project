@@ -4,11 +4,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 
 <Tab text="Reports" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReportController" >
     <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" fx:id="vbox">
         <children>
             <ComboBox fx:id="comboReport" prefWidth="150.0" />
+            <Label fx:id="test" />
         </children>
         <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
