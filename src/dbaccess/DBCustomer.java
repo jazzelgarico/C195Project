@@ -4,7 +4,6 @@ import dbconnection.DBConnection;
 import javafx.scene.control.Alert;
 import model.Customer;
 import model.CustomerList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,32 +70,34 @@ public class DBCustomer {
             ps.setInt(5,customer.getDivisionId());
 
             int rowsUpdated = ps.executeUpdate();
+
             if (rowsUpdated == 1) {
                 CustomerList.replace(customer);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Update successful.");
-                alert.setContentText("Customer with ID number " + id + " has been updated.");
             }
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    public static int delete(int customerID) {
-        int deletedAppointments = 0;
+    public static void delete(Customer customer) {
+        int customerId = customer.getCustomerId();
+        int totalDeletedAppointments = 0;
         try {
-            String querySumAppointments= "SELECT COUNT(Appointment_ID) from appointments where Customer_ID="
-                    + customerID +";";
-            String queryAppointments = "DELETE FROM appointments WHERE Customer_ID=" + customerID + ";";
-            String queryCustomers = "DELETE FROM customers WHERE Customer_ID=" + customerID + ";";
-            PreparedStatement psSumAppointments = DBConnection.getConnection().prepareStatement(querySumAppointments);
+            String queryAppointments = "DELETE FROM appointments WHERE Customer_ID=" + customerId + ";";
             PreparedStatement psAppointments = DBConnection.getConnection().prepareStatement(queryAppointments);
+            totalDeletedAppointments = psAppointments.executeUpdate();
+
+            String queryCustomers = "DELETE FROM customers WHERE Customer_ID=" + customerId + ";";
             PreparedStatement psCustomers = DBConnection.getConnection().prepareStatement(queryCustomers);
-            ResultSet rs = psSumAppointments.executeQuery();
-            rs.next();
-            deletedAppointments = rs.getInt(1);
-            psAppointments.execute();
             psCustomers.execute();
+
+            CustomerList.remove(customer);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Customer Deletion");
+            alert.setHeaderText("Deletion successful.");
+            alert.setContentText("Customer with ID number " + customerId + " and " +
+                    totalDeletedAppointments + " associated " + "appointment(s) have been deleted.");
+            alert.showAndWait();
         } catch (SQLException e) { e.printStackTrace();}
-            return deletedAppointments;
     }
 
 
