@@ -1,23 +1,21 @@
 package dbaccess;
 
-import controller.MainController;
+
 import controller.TimeHelper;
 import dbconnection.DBConnection;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.Appointment;
+import model.AppointmentList;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DBAppointment {
-    public static ObservableList<Appointment> addAll() {
-        ObservableList<Appointment> list = FXCollections.observableArrayList();
+    public static void addAll() {
         try {
             String query = "SELECT Appointment_ID,Title,Description,Location,Type,Start,End,Customer_ID,User_ID," +
-                    "Contact_ID from appointments";
+                    "Contact_ID FROM appointments";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -28,8 +26,10 @@ public class DBAppointment {
                 String location = rs.getString("Location");
                 int contactId = rs.getInt("Contact_ID");
                 String type = rs.getString("Type");
-                LocalDateTime startTime = TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
-                LocalDateTime endTime = TimeHelper.serverToClientTime(rs.getTimestamp("End").toLocalDateTime());
+                LocalDateTime startTime =
+                        TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
+                LocalDateTime endTime =
+                        TimeHelper.serverToClientTime(rs.getTimestamp("End").toLocalDateTime());
                 LocalDate appointmentDate = startTime.toLocalDate();
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
@@ -37,10 +37,9 @@ public class DBAppointment {
                 Appointment appointment = new Appointment(appointmentId, title, description, location, contactId, type,
                         appointmentDate, startTime, endTime, customerId, userId);
                 //Add appointment to list
-                list.add(appointment);
+                AppointmentList.add(appointment);
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        return list;
     }
 
     /**
@@ -78,24 +77,19 @@ public class DBAppointment {
             String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
                     " 'script', ?, ?, ?);";
             try {
-                PreparedStatement ps = DBConnection.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
                 ps.setString(1,appointment.getTitle());
                 ps.setString(2, appointment.getDescription());
                 ps.setString(3,appointment.getLocation());
                 ps.setString(4, appointment.getType());
-                ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-                ps.setTimestamp(6,Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setTimestamp(5,
+                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
+                ps.setTimestamp(6,
+                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
                 ps.setInt(7,appointment.getCustomerId());
                 ps.setInt(8,appointment.getUserId());
                 ps.setInt(9,appointment.getContactId());
-                int appointmentId = ps.executeUpdate();
-                // Alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Appointment Creation");
-                alert.setHeaderText("Successfully created.");
-                alert.setContentText("Appointment " + appointmentId + " for " + appointment.getType() + "" +
-                        " has been created.");
-                alert.showAndWait();
+                ps.execute();
 
             } catch (SQLException e){
                 e.printStackTrace();
@@ -125,8 +119,10 @@ public class DBAppointment {
                 ps.setString(2, appointment.getDescription());
                 ps.setString(3, appointment.getLocation());
                 ps.setString(4, appointment.getType());
-                ps.setTimestamp(5, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-                ps.setTimestamp(6, Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setTimestamp(5,
+                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
+                ps.setTimestamp(6,
+                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
                 ps.setInt(7, appointment.getCustomerId());
                 ps.setInt(8, appointment.getUserId());
                 ps.setInt(9, appointment.getContactId());
@@ -187,7 +183,8 @@ public class DBAppointment {
 
             while (rs.next()) {
                 int appointmentId = rs.getInt("Appointment_ID");
-                LocalDateTime start = TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
+                LocalDateTime start =
+                        TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
                 String startFormat = start.format(DateTimeFormatter.ofPattern("h:mma"));
                 LocalDate appointmentDate = start.toLocalDate();
                 String dateFormat = appointmentDate.format(DateTimeFormatter.ofPattern("M/d/yyyy"));
