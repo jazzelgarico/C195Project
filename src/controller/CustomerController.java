@@ -73,7 +73,7 @@ public class CustomerController implements Initializable {
     private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
 
     /**
-     * Updates Customer Table View from Customers in the database.
+     * Updates Customer Table View from CustomerList in the database.
      */
     public void updateCustomerTable() {
         tblViewCustomer.setItems(CustomerList.get());
@@ -86,29 +86,17 @@ public class CustomerController implements Initializable {
 
     /**
      * Deletes selected customer in Customer TableView and appointments associated with the selected Customer
-     * from the database. After Customer is deleted, Customer Table View and Appointment TableView is refreshed.
-     * Informs user that deletion is successful with an alert that specifies customerID of deleted Customer and the
+     * from the database and CustomerList. After Customer is deleted, Customer Table View is refreshed. Informs user
+     * that deletion is successful with an alert that specifies customerID of deleted Customer and the
      * number of appointments deleted.
      *
      * @param event the event which triggers customer to be deleted
      */
     @FXML
     void onActionCustomerDelete(ActionEvent event) {
-        int customerId = tblViewCustomer.getSelectionModel().getSelectedItem().getCustomerId();
-        int appointmentsDeleted = DBCustomer.delete(customerId);
-        // Update Table Views
+        Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
+        DBCustomer.delete(customer);
         updateCustomerTable();
-        // Alert
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Deletion successful.");
-        if (appointmentsDeleted == 1) {
-            alert.setContentText("Customer with ID number " + customerId + " and " + appointmentsDeleted + " associated "
-                    + "appointment have been deleted.");
-        } else {
-            alert.setContentText("Customer with ID number " + customerId + " and " + appointmentsDeleted + " associated "
-                    + "appointments have been deleted.");
-        }
-        alert.showAndWait();
     }
 
     /**
