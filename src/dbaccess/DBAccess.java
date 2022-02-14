@@ -98,41 +98,4 @@ public class DBAccess {
         return country;
     }
 
-    /**
-     * Given a contactId, returns a Contact with information from associated contact from the database.
-     *
-     * @param contactId contactId to find
-     * @return Contact with associated contactId
-     */
-    public static Contact getContactfromId(int contactId) {
-        String query = "SELECT * from contacts WHERE Contact_ID=" + contactId + ";";
-        Contact contact = new Contact();
-        try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            String name = rs.getString("Contact_Name");
-            String email = rs.getString("Email");
-            contact = new Contact(contactId, name, email);
-        } catch(SQLException e) { e.printStackTrace(); }
-        return contact;
-    }
-
-    public static ObservableList<Contact> getAllContacts() {
-        ObservableList<Contact> list = FXCollections.observableArrayList();
-        String query = "SELECT * from contacts;";
-        try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int contactId = rs.getInt("Contact_ID");
-                String name = rs.getString("Contact_Name");
-                String email = rs.getString("Email");
-                Contact contact = new Contact(contactId, name, email);
-                list.add(contact);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return list;
-    }
-
 }
