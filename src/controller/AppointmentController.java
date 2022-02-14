@@ -227,7 +227,7 @@ public class AppointmentController implements Initializable {
             txtFldTitle.setText(appointment.getTitle());
             txtFldDesc.setText(appointment.getDescription());
             txtFldLocation.setText(appointment.getLocation());
-            comboContact.setValue(ContactList.getContactfromId(appointment.getContactId()));
+            comboContact.setValue(ContactList.getContactFromId(appointment.getContactId()));
             txtFldType.setText(appointment.getType());
             datePicker.setValue(appointment.getAppointmentDate());
             comboStartTime.setValue(appointment.getStartTime());
