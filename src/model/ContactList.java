@@ -22,7 +22,7 @@ public class ContactList {
      * @param contactId contactId to find
      * @return Contact with associated contactId
      */
-    public static Contact getContactfromId(int contactId) {
+    public static Contact getContactFromId(int contactId) {
         Optional<Contact> optionalContact = list.stream().filter(c -> c.getContactId() == contactId).findFirst();
         return optionalContact.get();
     }
