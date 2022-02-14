@@ -1,6 +1,5 @@
 package controller;
 
-import dbaccess.DBAccess;
 import dbaccess.DBAppointment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +12,7 @@ import javafx.util.Callback;
 import model.Appointment;
 import model.AppointmentList;
 import model.Contact;
+import model.ContactList;
 import utility.TimeFormatCell;
 import utility.TimeHelper;
 import java.net.URL;
@@ -227,7 +227,7 @@ public class AppointmentController implements Initializable {
             txtFldTitle.setText(appointment.getTitle());
             txtFldDesc.setText(appointment.getDescription());
             txtFldLocation.setText(appointment.getLocation());
-            comboContact.setValue(DBAccess.getContactfromId(appointment.getContactId()));
+            comboContact.setValue(ContactList.getContactfromId(appointment.getContactId()));
             txtFldType.setText(appointment.getType());
             datePicker.setValue(appointment.getAppointmentDate());
             comboStartTime.setValue(appointment.getStartTime());
@@ -339,7 +339,8 @@ public class AppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         DBAppointment.addAll();
         updateAppointmentTable();
-        comboContact.setItems(DBAccess.getAllContacts());
+        ContactList.set();
+        comboContact.setItems(ContactList.get());
     }
 
 }
