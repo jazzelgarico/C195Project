@@ -20,12 +20,10 @@ public class AppointmentList {
 
     public static void replace(Appointment appointment){
         Optional<Appointment> oldAppointment = list.stream()
-                .filter(a -> a.getCustomerId() == appointment.getCustomerId())
+                .filter(a -> a.getAppointmentId() == appointment.getAppointmentId())
                 .findAny();
         if (oldAppointment.isEmpty()) {
         } else {
-            System.out.println(oldAppointment.get());
-            System.out.println(list.indexOf(oldAppointment.get()));
             list.set(list.indexOf(oldAppointment.get()),appointment);
         }
     }
