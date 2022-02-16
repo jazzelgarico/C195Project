@@ -24,9 +24,9 @@
         <children>
             <VBox spacing="10.0">
                 <children>
-                    <TableView fx:id="tblViewCustomer" prefHeight="400.0" prefWidth="670.0">
+                    <TableView fx:id="tblViewCustomer" prefHeight="400.0" prefWidth="630.0">
                         <columns>
-                            <TableColumn fx:id="colCustomerName" prefWidth="150.0" text="Name" />
+                            <TableColumn fx:id="colCustomerName" prefWidth="125.0" text="Name" />
                             <TableColumn fx:id="colAddress" prefWidth="150.0" text="Address" />
                             <TableColumn fx:id="colPhoneNumber" prefWidth="100.0" text="Phone Number" />
                             <TableColumn fx:id="colPostalCode" prefWidth="125.0" text="Postal Code" />
