@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import utility.TimeHelper;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable{
@@ -39,6 +40,8 @@ public class LoginController implements Initializable{
     @FXML
     private TextField txtFldUserName;
 
+    ResourceBundle rb = ResourceBundle.getBundle("Lang",Locale.getDefault());
+
     /**
      * Takes username and password, validates login credentials, and opens main view if credentials are valid.
      *
@@ -47,9 +50,9 @@ public class LoginController implements Initializable{
     @FXML
     public void btnLoginOnClick(ActionEvent event) {
         //Get Login Credentials
+
         String username = txtFldUserName.getText();
         String password = txtFldPassword.getText();
-
         if (DBAccess.validateLogin(username, password)) {
             try {
                 Stage stage;
@@ -58,19 +61,22 @@ public class LoginController implements Initializable{
 
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/main-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
-                stage.setTitle("Welcome");
                 stage.setScene(scene);
+                stage.setTitle(rb.getString("Welcome")+"!");
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            lblUserWarning.setText("The username or password provided is incorrect.");
+            lblUserWarning.setText(rb.getString("LoginError"));
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lblRegion.setText("Region: "+ TimeHelper.getClientZoneId());
+        lblUserName.setText(rb.getString("Username"));
+        lblPassword.setText(rb.getString("Password"));
+        btnLogin.setText(rb.getString("Login"));
+        lblRegion.setText(rb.getString("Region") + ": " + TimeHelper.getClientZoneId());
     }
 }
