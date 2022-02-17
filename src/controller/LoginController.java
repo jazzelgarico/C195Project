@@ -14,31 +14,23 @@ import javafx.stage.Stage;
 import utility.TimeHelper;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginController implements Initializable{
 
-    @FXML
-    private Button btnLogin;
-
-    @FXML
-    private Label lblPassword;
-
-    @FXML
-    private Label lblRegion;
-
-    @FXML
-    private Label lblUserName;
-
-    @FXML
-    private Label lblUserWarning;
-
-    @FXML
-    private PasswordField txtFldPassword;
-
-    @FXML
-    private TextField txtFldUserName;
+    @FXML private Button btnLogin;
+    @FXML private Label lblPassword;
+    @FXML private Label lblRegion;
+    @FXML private Label lblUserName;
+    @FXML private Label lblUserWarning;
+    @FXML private PasswordField txtFldPassword;
+    @FXML private TextField txtFldUserName;
 
     ResourceBundle rb = ResourceBundle.getBundle("Lang",Locale.getDefault());
 
@@ -50,10 +42,25 @@ public class LoginController implements Initializable{
     @FXML
     public void btnLoginOnClick(ActionEvent event) {
         //Get Login Credentials
+        final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
+
+        FileHandler fileHandler = null;
+        try {
+            fileHandler = new FileHandler(LoginController.class.getSimpleName() + ".log",true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.addHandler(fileHandler);
 
         String username = txtFldUserName.getText();
         String password = txtFldPassword.getText();
+        String logMessage = " login attempt by user " + username + "at " +
+                TimeHelper.clientToServerTime(LocalDateTime.now()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
+                "UTC";
         if (DBAccess.validateLogin(username, password)) {
+            logMessage = "Successful" + logMessage;
+            LOGGER.log(Level.INFO, logMessage);
+            fileHandler.close();
             try {
                 Stage stage;
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -62,12 +69,15 @@ public class LoginController implements Initializable{
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/main-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setScene(scene);
-                stage.setTitle(rb.getString("Welcome")+"!");
+                stage.setTitle("Welcome!");
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
+            logMessage = "Unsuccessful" + logMessage;
+            LOGGER.log(Level.INFO, logMessage);
+            fileHandler.close();
             lblUserWarning.setText(rb.getString("LoginError"));
         }
     }
