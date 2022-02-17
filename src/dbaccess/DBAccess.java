@@ -3,16 +3,11 @@ package dbaccess;
 import dbconnection.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.*;
-import utility.TimeHelper;
-
-import java.io.IOException;
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import model.Country;
+import model.FirstLevelDivision;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class DBAccess {
@@ -37,27 +32,6 @@ public class DBAccess {
                 isLoginValid = username.equals(myUser) && password.equals(myPassword);
             }
         } catch (SQLException e) { e.printStackTrace(); }
-        String logMessage;
-        Logger logger = Logger.getLogger(DBAccess.class.getName());
-        FileHandler fileHandler = null;
-        try {
-            fileHandler = new FileHandler(DBAccess.class.getSimpleName() + ".log");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        logger.addHandler(fileHandler);
-        if (isLoginValid) {
-            logMessage = "Successful login attempt by user " + username + "at " +
-                    TimeHelper.clientToServerTime(LocalDateTime.now()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
-                    " UTC";
-        }
-       else {
-            logMessage = "Unsuccessful login attempt by user " + username + "at " +
-                    TimeHelper.clientToServerTime(LocalDateTime.now()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
-                    " UTC";
-        }
-
-        logger.log(Level.INFO, logMessage);
         return isLoginValid;
     }
 
