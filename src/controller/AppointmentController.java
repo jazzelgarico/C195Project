@@ -337,9 +337,9 @@ public class AppointmentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ContactList.set();
         DBAppointment.addAll();
         updateAppointmentTable();
-        ContactList.set();
         comboContact.setItems(ContactList.get());
     }
 
