@@ -11,11 +11,13 @@ public class AppointmentList {
     public static void add(Appointment appointment) {
         list.add(appointment);
         MonthTypeReport.add(appointment);
+        ContactHoursReport.add(appointment);
     }
 
     public static void remove(Appointment appointment) {
         list.remove(appointment);
         MonthTypeReport.remove(appointment);
+        ContactHoursReport.remove(appointment);
     }
 
     public static void replace(Appointment appointment){
