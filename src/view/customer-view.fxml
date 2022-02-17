@@ -37,7 +37,6 @@
                         <buttons>
                             <Button fx:id="btnEditCustomer" mnemonicParsing="false" onAction="#onActionEditCustomer" text="Edit" />
                             <Button fx:id="btnDeleteCustomer" mnemonicParsing="false" onAction="#onActionCustomerDelete" text="Delete" />
-                            <Button mnemonicParsing="false" text="Create Appointment" />
                         </buttons>
                     </ButtonBar>
                 </children>
