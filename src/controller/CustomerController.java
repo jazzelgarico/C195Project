@@ -16,64 +16,31 @@ import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
 
-    // Customer Tab
-
     // Customer Tab Buttons
-    @FXML
-    private Button btnDeleteCustomer;
-
-    @FXML
-    private Button btnEditCustomer;
-
-    @FXML
-    private Button btnSaveCustomer;
-
-    @FXML
-    private Button btnClearCustomer;
+    @FXML private Button btnDeleteCustomer;
+    @FXML private Button btnEditCustomer;
+    @FXML private Button btnSaveCustomer;
+    @FXML private Button btnClearCustomer;
 
     // Table View Customer
-    @FXML
-    private TableView<Customer> tblViewCustomer;
-
-    @FXML
-    private TableColumn<Customer, String> colAddress;
-
-    @FXML
-    private TableColumn<Customer, String> colCustomerName;
-
-    @FXML
-    private TableColumn<Customer, Integer> colFirstLevelDivision;
-
-    @FXML
-    private TableColumn<Customer, String> colPhoneNumber;
-
-    @FXML
-    private TableColumn<Customer, String> colPostalCode;
+    @FXML private TableView<Customer> tblViewCustomer;
+    @FXML private TableColumn<Customer, String> colAddress;
+    @FXML private TableColumn<Customer, String> colCustomerName;
+    @FXML private TableColumn<Customer, Integer> colFirstLevelDivision;
+    @FXML private TableColumn<Customer, String> colPhoneNumber;
+    @FXML private TableColumn<Customer, String> colPostalCode;
 
     // Customer Form
-    @FXML
-    private TextField txtFldCustomerIDCustomer;
-
-    @FXML
-    private TextField txtFldName;
-
-    @FXML
-    private TextField txtFldAddress;
-
-    @FXML
-    private TextField txtFldPhoneNumber;
-
-    @FXML
-    private TextField txtFldPostalCode;
-
-    @FXML
-    private ComboBox<Country> comboCountry;
-
-    @FXML
-    private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
+    @FXML private TextField txtFldCustomerIDCustomer;
+    @FXML private TextField txtFldName;
+    @FXML private TextField txtFldAddress;
+    @FXML private TextField txtFldPhoneNumber;
+    @FXML private TextField txtFldPostalCode;
+    @FXML private ComboBox<Country> comboCountry;
+    @FXML private ComboBox<FirstLevelDivision> comboFirstLevelDiv;
 
     /**
-     * Updates Customer Table View from CustomerList in the database.
+     * Updates Customer Table View from CustomerList.
      */
     public void updateCustomerTable() {
         tblViewCustomer.setItems(CustomerList.get());
@@ -92,8 +59,7 @@ public class CustomerController implements Initializable {
      *
      * @param event the event which triggers customer to be deleted
      */
-    @FXML
-    void onActionCustomerDelete(ActionEvent event) {
+    @FXML void onActionCustomerDelete(ActionEvent event) {
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
         DBCustomer.delete(customer);
         updateCustomerTable();
@@ -104,8 +70,7 @@ public class CustomerController implements Initializable {
      *
      * @param event the event which triggers customer to be edited
      */
-    @FXML
-    void onActionEditCustomer(ActionEvent event) {
+    @FXML void onActionEditCustomer(ActionEvent event) {
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
         int id = customer.getCustomerId();
         String name = customer.getCustomerName();
@@ -126,18 +91,14 @@ public class CustomerController implements Initializable {
     }
 
     /**
-     * Edits or creates a new customer.
-     * <p>
-     * If the customerId text field is filled in, updates the customer in the database
+     * Edits or creates a new customer. If the customerId text field is filled in, updates the customer in the database
      * with the given customerId from the contents of the Customer Form text fields. If the customerID text filled is
      * empty, creates a new customer in the database. After customer is updated or added, updates the Customer Table
      * View and clears the Customer Form.
      *
-     *
      * @param event the event object which triggers customer to be saved
      */
-    @FXML
-    void onActionSaveCustomer(ActionEvent event) {
+    @FXML void onActionSaveCustomer(ActionEvent event) {
         if (comboFirstLevelDiv.getValue().equals(null)) {
             // Alert if comboFirstLevelDiv does not have a value.
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -163,22 +124,7 @@ public class CustomerController implements Initializable {
                 DBCustomer.edit(customer);
             }
             updateCustomerTable();
-            clearCustomerForm();
         }
-    }
-
-    /**
-     * Clears the Customer Form fields. The customer form fields include txtFldCustomerIDCustomer, txtFldName,
-     * txtFldAddress, txtFldPostalCode, txtFldPhoneNumber,comboFirstLevelDiv, and comboCountry.
-     */
-    public void clearCustomerForm() {
-        txtFldCustomerIDCustomer.clear();
-        txtFldName.clear();
-        txtFldAddress.clear();
-        txtFldPostalCode.clear();
-        txtFldPhoneNumber.clear();
-        comboFirstLevelDiv.setValue(null);
-        comboCountry.setValue(null);
     }
 
     /**
@@ -197,11 +143,26 @@ public class CustomerController implements Initializable {
         }
     }
 
-    @FXML
-    void onActionClearCustomer(ActionEvent event) {
-        clearCustomerForm();
+    /**
+     * Clears the Customer Form fields. The customer form fields include txtFldCustomerIDCustomer, txtFldName,
+     * txtFldAddress, txtFldPostalCode, txtFldPhoneNumber,comboFirstLevelDiv, and comboCountry.
+     *
+     * @param event the event which triggers Customer Form fields to be cleared
+     */
+    @FXML void onActionClearCustomer(ActionEvent event) {
+        txtFldCustomerIDCustomer.clear();
+        txtFldName.clear();
+        txtFldAddress.clear();
+        txtFldPostalCode.clear();
+        txtFldPhoneNumber.clear();
+        comboFirstLevelDiv.setValue(null);
+        comboCountry.setValue(null);
     }
 
+    /**
+     * Adds the database's customer table to CustomerList, sets the Country combo with list of countries from
+     * the database, updates the customer table with customers from CustomerList.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         DBCustomer.addAll();
