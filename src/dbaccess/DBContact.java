@@ -8,8 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains static methods to access the database contacts table.
+ */
 public class DBContact {
-
+    /**
+     * Provides an ObservableList which contain all contacts from the database's contacts table. Queries the database's
+     * contacts table for all columns, creates a new Contact for each row, and adds each Contact to the ObservableList.
+     *
+     * @return an ObservableList containing all rows and columns from the database's contacts table
+     */
     public static ObservableList<Contact> getAll() {
         ObservableList<Contact> list = FXCollections.observableArrayList();
         String query = "SELECT * from contacts;";
