@@ -8,22 +8,32 @@ import model.MonthTypeReport;
 import java.time.Month;
 
 public class MonthTypeView {
-    private static TableView<MonthTypeCount> tblViewMonthType = new TableView<>();
-    private static TableColumn<MonthTypeCount,String> colType = new TableColumn<>();
-    private static TableColumn<MonthTypeCount,Month> colMonth = new TableColumn<>();
-    private static TableColumn<MonthTypeCount,Integer> colCount = new TableColumn<>();
 
-    public static TableView<MonthTypeCount> get() {
+    private TableView<MonthTypeCount> tblViewMonthType;
+    private TableColumn<MonthTypeCount,String> colType;
+    private TableColumn<MonthTypeCount,Month> colMonth;
+    private TableColumn<MonthTypeCount,Integer> colCount;
+
+    public MonthTypeView() {
+        tblViewMonthType = new TableView();
+        colType = new TableColumn();
+        colMonth = new TableColumn();
+        colCount = new TableColumn();
         tblViewMonthType.getColumns().add(colType);
         tblViewMonthType.getColumns().add(colMonth);
         tblViewMonthType.getColumns().add(colCount);
         colType.setText("Type");
         colMonth.setText("Month");
         colCount.setText("Count");
+        tblViewMonthType.setMaxWidth(225);
         tblViewMonthType.setItems(MonthTypeReport.get());
+        tblViewMonthType.setMaxHeight((tblViewMonthType.getItems().size() * 25) +25);
         colType.setCellValueFactory(new PropertyValueFactory("Type"));
         colMonth.setCellValueFactory(new PropertyValueFactory("Month"));
         colCount.setCellValueFactory(new PropertyValueFactory("Count"));
+    }
+
+    public TableView<MonthTypeCount> get() {
         return tblViewMonthType;
     }
 }
