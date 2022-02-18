@@ -50,4 +50,13 @@ public class MonthTypeCount {
     public int hashCode() {
         return Objects.hash(type, month, count);
     }
+
+    @Override
+    public String toString() {
+        return "MonthTypeCount{" +
+                "type='" + type + '\'' +
+                ", month=" + month +
+                ", count=" + count +
+                '}';
+    }
 }
