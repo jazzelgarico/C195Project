@@ -14,6 +14,9 @@ import model.FirstLevelDivision;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for customer-view
+ */
 public class CustomerController implements Initializable {
 
     // Customer Tab Buttons
@@ -59,7 +62,8 @@ public class CustomerController implements Initializable {
      *
      * @param event the event which triggers customer to be deleted
      */
-    @FXML void onActionCustomerDelete(ActionEvent event) {
+    @FXML
+    void onActionCustomerDelete(ActionEvent event) {
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
         DBCustomer.delete(customer);
         updateCustomerTable();
@@ -70,7 +74,8 @@ public class CustomerController implements Initializable {
      *
      * @param event the event which triggers customer to be edited
      */
-    @FXML void onActionEditCustomer(ActionEvent event) {
+    @FXML
+    void onActionEditCustomer(ActionEvent event) {
         Customer customer = tblViewCustomer.getSelectionModel().getSelectedItem();
         int id = customer.getCustomerId();
         String name = customer.getCustomerName();
@@ -98,14 +103,9 @@ public class CustomerController implements Initializable {
      *
      * @param event the event object which triggers customer to be saved
      */
-    @FXML void onActionSaveCustomer(ActionEvent event) {
-        if (comboFirstLevelDiv.getValue().equals(null)) {
-            // Alert if comboFirstLevelDiv does not have a value.
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("First-Level Division must be specified");
-            alert.showAndWait();
-        }
-        else {
+    @FXML
+    void onActionSaveCustomer(ActionEvent event) {
+        if (isFormCompleted()) {
             //Get Form Data
             String customerName = txtFldName.getText();
             String address = txtFldAddress.getText();
@@ -125,13 +125,36 @@ public class CustomerController implements Initializable {
             }
             updateCustomerTable();
         }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Form Message");
+            alert.setHeaderText("Incomplete form.");
+            alert.setContentText("Please fill in all fields in the Customer Form.");
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * Checks if Customer Form is completed. Returns false if any text field except txtFldCustomerIDCustomer is empty,
+     * if any text field only contains spaces, or if any combo box is null.
+     *
+     * @return true if the form is completed, false if the form is not completed
+     */
+    boolean isFormCompleted() {
+        boolean anyTextFieldEmpty = txtFldName.getText().trim() == "" || txtFldAddress.getText().trim() == "" ||
+                txtFldPhoneNumber.getText().trim() == "" || txtFldPostalCode.getText().trim() == "";
+
+        boolean anyComboBoxNull = comboCountry.getValue() == null ||  comboFirstLevelDiv.getValue() == null;
+
+        return !(anyTextFieldEmpty || anyComboBoxNull);
     }
 
     /**
      * Gets the selected country from the combo box and fills in the first-divisions combo box with the first-level
      * divisions associated with the selected country.
      * <p>
-     * onActionSaveCustomer triggers error during comboCountry.setValue(null) so must check if selection is empty
+     * Triggers error if comboCountry is set to null (like when the Customer Form is cleared) so must check if selection
+     * is empty.
      *
      * @param event the event object which triggers selection in country combo box
      */
@@ -144,12 +167,13 @@ public class CustomerController implements Initializable {
     }
 
     /**
-     * Clears the Customer Form fields. The customer form fields include txtFldCustomerIDCustomer, txtFldName,
+     * Clears the Customer Form fields. The form fields cleared include txtFldCustomerIDCustomer, txtFldName,
      * txtFldAddress, txtFldPostalCode, txtFldPhoneNumber,comboFirstLevelDiv, and comboCountry.
      *
      * @param event the event which triggers Customer Form fields to be cleared
      */
-    @FXML void onActionClearCustomer(ActionEvent event) {
+    @FXML
+    void onActionClearCustomer(ActionEvent event) {
         txtFldCustomerIDCustomer.clear();
         txtFldName.clear();
         txtFldAddress.clear();
