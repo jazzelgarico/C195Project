@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
+/**
+ * Contains static methods to access the appointments table and update the Appointment and AppointmentList model.
+ */
 public class DBAppointment {
 
     /**
@@ -130,8 +132,9 @@ public class DBAppointment {
                 ps.setInt(7, appointment.getCustomerId());
                 ps.setInt(8, appointment.getUserId());
                 ps.setInt(9, appointment.getContactId());
-                ps.execute();
-                AppointmentList.replace(appointment);
+                if (ps.executeUpdate() > 0) {
+                    AppointmentList.replace(appointment);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -151,9 +154,8 @@ public class DBAppointment {
         String query =  "DELETE FROM appointments WHERE Appointment_ID=" + appointmentId;
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            if (ps.execute()) {
+            if (ps.executeUpdate() > 0) {
                 AppointmentList.remove(appointment);
-
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Appointment Deletion");
                 alert.setHeaderText("Deletion successful.");
