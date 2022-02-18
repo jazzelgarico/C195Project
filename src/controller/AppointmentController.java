@@ -39,10 +39,10 @@ public class AppointmentController implements Initializable {
     @FXML private RadioButton radioBtnWeek;
 
     // Appointment Tab Buttons
-    @FXML private Button btnDeleteAppointment;
     @FXML private Button btnEditAppointment;
-    @FXML private Button btnSaveAppointment;
+    @FXML private Button btnDeleteAppointment;
     @FXML private Button btnClearAppointment;
+    @FXML private Button btnSaveAppointment;
 
     // TableView Appointment
     @FXML private TableView<Appointment> tblViewAppointment;
@@ -59,15 +59,15 @@ public class AppointmentController implements Initializable {
     @FXML private TableColumn<Appointment, Integer> colUserId;
 
     // Appointment Form
-    @FXML private ComboBox<Contact> comboContact;
-    @FXML private DatePicker datePicker;
-    @FXML private ComboBox<LocalDateTime> comboEndTime;
-    @FXML private ComboBox<LocalDateTime> comboStartTime;
-    @FXML private TextField txtFldType;
     @FXML private TextField txtFldAppID;
+    @FXML private TextField txtFldTitle;
     @FXML private TextField txtFldDesc;
     @FXML private TextField txtFldLocation;
-    @FXML private TextField txtFldTitle;
+    @FXML private ComboBox<Contact> comboContact;
+    @FXML private TextField txtFldType;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<LocalDateTime> comboStartTime;
+    @FXML private ComboBox<LocalDateTime> comboEndTime;
     @FXML private TextField txtFldCustomerIDApp;
     @FXML private TextField txtFldUserID;
 
@@ -148,7 +148,8 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Updates tblViewAppointment with appointments in AppointmentList that start in the current week.
+     * Updates tblViewAppointment with appointments in AppointmentList that start in the current week. The current week
+     * starts on a Sunday and ends on a Saturday.
      *
      */
     public void viewWeek() {
@@ -161,7 +162,7 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Deletes the selected appointment from tblViewAppointment. Updates tblViewAppointment after deletio n.
+     * Deletes the selected appointment from tblViewAppointment. Updates tblViewAppointment after deletion.
      *
       * @param event the event which triggers an appointment to be deleted
      */
@@ -203,8 +204,8 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Creates an appointment from Appointment Form text fields if txtFldAppID is empty or updates appointment with the id
-     * specified in txtFldAppId if txtFldAppID is not empty.
+     * Creates an appointment from Appointment Form text fields if txtFldAppID is empty or updates appointment with the
+     * id specified in txtFldAppId if txtFldAppID is not empty.
      *
      * @param event the event which triggers an appointment to be saved
      */
@@ -264,8 +265,8 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Checks if AppointmentForm is completed. Returns false if any text field is empty, if any text field only contains
-     * white space, or if any combo box is null.
+     * Checks if AppointmentForm is completed. Returns false if any text field except txtFldAppID is empty, if any text
+     * field only contains white space, or if any combo box is null.
      *
      * @return true if the form is completed, false if the form is not completed
      */
