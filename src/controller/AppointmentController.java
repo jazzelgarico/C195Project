@@ -25,6 +25,9 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for appointment-view
+ */
 public class AppointmentController implements Initializable {
 
     private static final Callback<ListView<LocalDateTime>, ListCell<LocalDateTime>> LIST_TIME_FACTORY =
@@ -204,29 +207,37 @@ public class AppointmentController implements Initializable {
      * @param event the event which triggers an appointment to be saved
      */
     @FXML void onActionSaveAppointment(ActionEvent event) {
-        String title = txtFldTitle.getText();
-        String desc = txtFldDesc.getText();
-        String location = txtFldLocation.getText();
-        int contactId = comboContact.getSelectionModel().getSelectedItem().getContactId();
-        String type = txtFldType.getText();
-        LocalDate appDate = datePicker.getValue();
-        LocalDateTime start = comboStartTime.getSelectionModel().getSelectedItem();
-        LocalDateTime end = comboEndTime.getSelectionModel().getSelectedItem();
-        int customerId = Integer.parseInt(txtFldCustomerIDApp.getText());
-        int userId = Integer.parseInt(txtFldUserID.getText());
-        Appointment appointment = new Appointment(title, desc, location, contactId, type, appDate, start, end,
-                customerId, userId);
-        if (txtFldAppID.getText().isEmpty()) {
-            // Create New Appointment
-            DBAppointment.add(appointment);
+        if (isFormCompleted()) {
+            String title = txtFldTitle.getText();
+            String desc = txtFldDesc.getText();
+            String location = txtFldLocation.getText();
+            int contactId = comboContact.getSelectionModel().getSelectedItem().getContactId();
+            String type = txtFldType.getText();
+            LocalDate appDate = datePicker.getValue();
+            LocalDateTime start = comboStartTime.getSelectionModel().getSelectedItem();
+            LocalDateTime end = comboEndTime.getSelectionModel().getSelectedItem();
+            int customerId = Integer.parseInt(txtFldCustomerIDApp.getText());
+            int userId = Integer.parseInt(txtFldUserID.getText());
+            Appointment appointment = new Appointment(title, desc, location, contactId, type, appDate, start, end,
+                    customerId, userId);
+            if (txtFldAppID.getText().isEmpty()) {
+                // Create New Appointment
+                DBAppointment.add(appointment);
+            }
+            else {
+                // Edit Existing Appointment
+                int appointmentId = Integer.parseInt(txtFldAppID.getText());
+                appointment.setAppointmentId(appointmentId);
+                DBAppointment.edit(appointment);
+            }
+            updateAppointmentTable();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Form Message");
+            alert.setHeaderText("Incomplete form.");
+            alert.setContentText("Please fill in all fields in the Appointment Form.");
+            alert.showAndWait();
         }
-        else {
-            // Edit Existing Appointment
-            int appointmentId = Integer.parseInt(txtFldAppID.getText());
-            appointment.setAppointmentId(appointmentId);
-            DBAppointment.edit(appointment);
-        }
-        updateAppointmentTable();
     }
 
     /**
@@ -246,6 +257,27 @@ public class AppointmentController implements Initializable {
         comboEndTime.setValue(null);
         txtFldCustomerIDApp.clear();
         txtFldUserID.clear();
+    }
+
+    /**
+     * Checks if AppointmentForm is completed. Returns false if any text field is empty, if any text field only contains
+     * spaces, or if any combo box is null.
+     *
+     * @return true if the form is completed, false if the form is not completed
+     */
+    @FXML boolean isFormCompleted() {
+        boolean anyTextFieldEmpty = txtFldTitle.getText() == "" || txtFldDesc.getText() == "" ||
+                txtFldLocation.getText() == "" || txtFldType.getText() == "" || txtFldCustomerIDApp.getText() == "" ||
+                txtFldUserID.getText() == "";
+
+        boolean anyTextFieldSpaceOnly = txtFldTitle.getText().trim() == "" || txtFldDesc.getText().trim() == "" ||
+                txtFldLocation.getText().trim() == "" || txtFldType.getText().trim() == "" ||
+                txtFldCustomerIDApp.getText().trim() == "" || txtFldUserID.getText().trim() == "";
+
+        boolean anyComboBoxNull = comboContact.getValue() == null ||  datePicker.getValue() == null ||
+                comboStartTime.getValue() == null || comboEndTime.getValue() == null;
+
+        return !(anyTextFieldEmpty || anyComboBoxNull || anyTextFieldSpaceOnly);
     }
 
     /**
