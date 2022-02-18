@@ -7,6 +7,9 @@ import javafx.scene.control.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for main-view
+ */
 public class MainController implements Initializable {
 
     // Controllers
