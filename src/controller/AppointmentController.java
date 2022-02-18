@@ -165,7 +165,8 @@ public class AppointmentController implements Initializable {
      *
       * @param event the event which triggers an appointment to be deleted
      */
-    @FXML void onActionDeleteAppointment(ActionEvent event) {
+    @FXML
+    void onActionDeleteAppointment(ActionEvent event) {
         Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
         DBAppointment.delete(appointment);
         updateAppointmentTable();
@@ -176,7 +177,8 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers appointment to be edited
      */
-    @FXML void onActionEditAppointment(ActionEvent event) {
+    @FXML
+    void onActionEditAppointment(ActionEvent event) {
         if (tblViewAppointment.getSelectionModel().isEmpty()) {
             // Warn user if no appointment is selected
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -206,7 +208,8 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers an appointment to be saved
      */
-    @FXML void onActionSaveAppointment(ActionEvent event) {
+    @FXML
+    void onActionSaveAppointment(ActionEvent event) {
         if (isFormCompleted()) {
             String title = txtFldTitle.getText();
             String desc = txtFldDesc.getText();
@@ -245,7 +248,8 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers the Appointment Form Fields to be cleared
      */
-    @FXML void onActionClearAppointment(ActionEvent event) {
+    @FXML
+    void onActionClearAppointment(ActionEvent event) {
         txtFldAppID.clear();
         txtFldTitle.clear();
         txtFldDesc.clear();
@@ -265,7 +269,7 @@ public class AppointmentController implements Initializable {
      *
      * @return true if the form is completed, false if the form is not completed
      */
-    @FXML boolean isFormCompleted() {
+    boolean isFormCompleted() {
         boolean anyTextFieldEmpty = txtFldTitle.getText() == "" || txtFldDesc.getText() == "" ||
                 txtFldLocation.getText() == "" || txtFldType.getText() == "" || txtFldCustomerIDApp.getText() == "" ||
                 txtFldUserID.getText() == "";
@@ -288,15 +292,17 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers datePicker value to change
      */
-    @FXML void onActionDatePicker(ActionEvent event) {
+    @FXML
+    void onActionDatePicker(ActionEvent event) {
         if (datePicker.getValue() != null) {
-            LocalDate ld = datePicker.getValue();
-            LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
-            LocalDateTime localEnd = TimeHelper.getTimeClose(ld);
+            final LocalDate PICKED_DATE = datePicker.getValue();
+            final LocalDateTime BUSINESS_CLOSE = TimeHelper.getTimeClose(PICKED_DATE);
+            LocalDateTime localStart = TimeHelper.getTimeOpen(PICKED_DATE);
+
             // Fill in comboStartTime and comboEndTime
             ObservableList<LocalDateTime> startList = FXCollections.observableArrayList();
             ObservableList<LocalDateTime> endList = FXCollections.observableArrayList();
-            while (localStart.isBefore(localEnd)) {
+            while (localStart.isBefore(BUSINESS_CLOSE)) {
                 startList.add(localStart);
                 endList.add(localStart.plusMinutes(15));
                 localStart = localStart.plusMinutes(15);
@@ -315,7 +321,8 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers viewMonth to be shown
      */
-    @FXML void onActionMonthRadio(ActionEvent event) {
+    @FXML
+    void onActionMonthRadio(ActionEvent event) {
         viewMonth();
     }
 
@@ -324,7 +331,8 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers viewMonth to be shown
      */
-    @FXML void onActionWeekRadio(ActionEvent event) {
+    @FXML
+    void onActionWeekRadio(ActionEvent event) {
         viewWeek();
     }
 
@@ -332,9 +340,10 @@ public class AppointmentController implements Initializable {
      * Sets comboEndTime's items to start from 15 minutes after the selected item from comboStartTime and continues
      * every 15 minutes until business closing time.
      *
-     * @param event
+     * @param event the event which triggers comboStartTime value to change
      */
-    @FXML void onActionStartTime(ActionEvent event) {
+    @FXML
+    void onActionStartTime(ActionEvent event) {
         if (comboStartTime.getValue() != null) {
             final LocalDate APPOINTMENT_DATE = datePicker.getValue();
             final LocalDateTime CLOSE_TIME = TimeHelper.getTimeClose(APPOINTMENT_DATE);
@@ -345,6 +354,7 @@ public class AppointmentController implements Initializable {
                 endList.add(localStart.plusMinutes(15));
                 localStart = localStart.plusMinutes(15);
             }
+
             comboEndTime.setItems(endList);
             comboEndTime.setCellFactory(LIST_TIME_FACTORY);
             comboEndTime.setButtonCell(LIST_TIME_FACTORY.call(null));
@@ -352,8 +362,8 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Sets ContactList, adds the database's appointment table to the AppointmentList, updates the
-     * appointment table, and sets the items in comboContact according to ContactList
+     * Sets ContactList, adds the database's appointment table to the AppointmentList, updates the appointment table,
+     * and sets the items in comboContact according to ContactList.
      *
      */
     @Override
