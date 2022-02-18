@@ -22,6 +22,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller for login-view
+ */
 public class LoginController implements Initializable{
 
     @FXML private Button btnLogin;
@@ -39,10 +42,14 @@ public class LoginController implements Initializable{
      *
      * @param event which triggers login attempt
      */
-    @FXML public void btnLoginOnClick(ActionEvent event) {
-        //Get Login Credentials
-        final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
+    @FXML
+    public void btnLoginOnClick(ActionEvent event) {
+        // Get login credentials
+        String username = txtFldUserName.getText();
+        String password = txtFldPassword.getText();
 
+        // Logger
+        final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
         FileHandler fileHandler = null;
         try {
             fileHandler = new FileHandler(LoginController.class.getSimpleName() + ".log",true);
@@ -50,12 +57,11 @@ public class LoginController implements Initializable{
             e.printStackTrace();
         }
         LOGGER.addHandler(fileHandler);
-
-        String username = txtFldUserName.getText();
-        String password = txtFldPassword.getText();
         String logMessage = " login attempt by user " + username + "at " +
                 TimeHelper.clientToServerTime(LocalDateTime.now()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
                 "UTC";
+
+        // Validate login credentials
         if (DBAccess.validateLogin(username, password)) {
             logMessage = "Successful" + logMessage;
             LOGGER.log(Level.INFO, logMessage);
@@ -82,7 +88,7 @@ public class LoginController implements Initializable{
     }
 
     /**
-     * Sets texts for lblUserName, lblPassword, btnLogin, and lblRegion
+     * Sets texts for lblUserName, lblPassword, btnLogin, and lblRegion using the Resource Bundle.
      *
      */
     @Override
