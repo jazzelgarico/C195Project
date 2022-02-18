@@ -6,16 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 import view.ContactHoursView;
 import view.ContactScheduleView;
 import view.MonthTypeView;
 
+/**
+ * Controller for report-view
+ */
 public class ReportController implements Initializable {
 
     @FXML private VBox vbox;
