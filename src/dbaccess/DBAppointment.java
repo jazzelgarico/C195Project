@@ -1,6 +1,5 @@
 package dbaccess;
 
-
 import utility.TimeHelper;
 import dbconnection.DBConnection;
 import javafx.scene.control.Alert;
@@ -11,7 +10,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
 public class DBAppointment {
+
+    /**
+     * Adds all the appointments from the appointments table in the database to AppointmentList.
+     * <p>
+     * Queries the database for Appointment_ID, Title, Description Location, TYpe, Start, End, Customer_ID, User_ID,
+     * and Contact_ID from appointments and uses those values to creates a new Appointment and adds that new Appointment
+     * to AppointmentList
+     *
+     */
     public static void addAll() {
         try {
             String query = "SELECT Appointment_ID,Title,Description,Location,Type,Start,End,Customer_ID,User_ID," +
@@ -43,11 +52,15 @@ public class DBAppointment {
     }
 
     /**
+     * Adds the given appointment to the appointmentList and inserts the appointment into the database.
+     * <p>
+     * This method checks for conflicts first. If a conflict is detected, it shows an error alert. If a conflict is not
+     * detected, the appointment is added to the AppointmentList and into the appointments table in the database.
      *
-     * @param appointment
+     * @param appointment the appointment to add to AppointmentList and insert into the database
      */
     public static void add(Appointment appointment) {
-        if (checkConflict(appointment)) {
+        if (AppointmentList.checkConflict(appointment)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Appointment Conflict");
             alert.setHeaderText("Appointment could not be created.");
@@ -58,7 +71,8 @@ public class DBAppointment {
             String query = "INSERT INTO appointments VALUES(NULL, ?, ?, ?, ?, ?, ?, NOW(), 'script', NOW()," +
                     " 'script', ?, ?, ?);";
             try {
-                PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
+                PreparedStatement ps = DBConnection.getConnection().
+                        prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1,appointment.getTitle());
                 ps.setString(2, appointment.getDescription());
                 ps.setString(3,appointment.getLocation());
@@ -71,6 +85,10 @@ public class DBAppointment {
                 ps.setInt(8,appointment.getUserId());
                 ps.setInt(9,appointment.getContactId());
                 ps.execute();
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                int id = rs.getInt(1);
+                appointment.setAppointmentId(id);
                 AppointmentList.add(appointment);
             } catch (SQLException e){
                 e.printStackTrace();
@@ -79,11 +97,16 @@ public class DBAppointment {
     }
 
     /**
+     * Edits the given appointment to the appointmentList and updates the appointment in the database.
+     * <p>
+     * This method checks for conflicts first. If a conflict is detected, it shows an error alert. If a conflict is not
+     * detected, the appointment is edited in the AppointmentList and updated in the appointments table in the
+     * database.
      *
-     * @param appointment
+     * @param appointment the appointment to be edited
      */
     public static void edit(Appointment appointment) {
-        if (checkConflict(appointment)) {
+        if (AppointmentList.checkConflict(appointment)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("Appointment conflict.");
             alert.setContentText("Customer has an existing appointment which conflicts with this appointment's" +
@@ -116,7 +139,9 @@ public class DBAppointment {
     }
 
     /**
-     * Deletes the appointment matching the given appointmentId from the database.
+     * Deletes the appointment matching the given appointmentId from the database and in AppointmentList.
+     * <p>
+     * Gives an alert when appointment is successfully deleted with the appointmentId and Type.
      *
      * @param appointment appointment to delete
      */
@@ -126,47 +151,24 @@ public class DBAppointment {
         String query =  "DELETE FROM appointments WHERE Appointment_ID=" + appointmentId;
         try {
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ps.execute();
-            AppointmentList.remove(appointment);
+            if (ps.execute()) {
+                AppointmentList.remove(appointment);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Appointment Deletion");
-            alert.setHeaderText("Deletion successful.");
-            alert.setContentText("Appointment with ID " + appointmentId + " for " + type + " has been deleted.");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Deletion");
+                alert.setHeaderText("Deletion successful.");
+                alert.setContentText("Appointment with ID " + appointmentId + " for " + type + " has been deleted.");
+                alert.showAndWait();
+            }
         } catch (SQLException e) { e.printStackTrace(); };
     }
 
-    private static boolean checkConflict(Appointment appointment) {
-        boolean conflict = true;
-        int customerId = appointment.getCustomerId();
-        int appointmentId = appointment.getAppointmentId();
-        Timestamp start = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime()));
-        Timestamp end = Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime()));
-
-        String queryStart = "SELECT COUNT(*) FROM appointments WHERE ";
-        String condition1 = "Customer_ID=" + customerId + " AND Appointment_ID<>" + appointmentId;
-        String condition2 = "(Start>='" + start + "' AND Start<'" + end + "')";
-        String condition3 = "(End>'" + start + "' AND Start<'" + end + "')";
-        String query = queryStart + condition1 + " AND (" + condition2 + " OR " + condition3 + ")";
-        try {
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            int count = rs.getInt("COUNT(*)");
-            if (count==0) {
-                conflict = false;
-            }
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-        return conflict;
-    }
-
     /**
-     * Triggers an alert displaying if there is an appointment within 15 minutes of the user's login. If there is an
-     * appointment within 15 minutes, the alert informs the user of the appointment ID, date, and time. If there is no
-     * appointment within 15 minutes, the alert informs the user that there are no upcoming appointments.
+     * Triggers an alert displaying if there is an appointment within 15 minutes of the user's login.
+     * <p>
+     * If there is an appointment within 15 minutes, the alert informs the user of the appointment ID, date, and time.
+     * If there is no appointment within 15 minutes, the alert informs the user that there are no upcoming appointments.
+     *
      */
     public static void checkUpcoming() {
         LocalDateTime loginTime = TimeHelper.clientToServerTime(LocalDateTime.now());
