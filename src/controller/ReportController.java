@@ -9,7 +9,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
+import view.ContactHoursView;
+import view.ContactScheduleView;
 import view.MonthTypeView;
 
 public class ReportController implements Initializable {
@@ -18,26 +22,44 @@ public class ReportController implements Initializable {
     private VBox vbox;
 
     @FXML
+    private VBox reportContent;
+
+    @FXML
     private Label test;
 
     @FXML
-    ComboBox comboReport;
+    private ComboBox comboReport;
+
 
     @FXML
     void onActionComboReport(ActionEvent event){
-        if (comboReport.getSelectionModel().getSelectedItem() == "MonthTypeReport") {
-            vbox.getChildren().add(MonthTypeView.get());
-        } else if (comboReport.getSelectionModel().getSelectedItem() == "ContactSchedule") {
+        updateReportContent();
+    }
 
-        } else if (comboReport.getSelectionModel().getSelectedItem() == "Additional") {
-
+    void updateReportContent() {
+        if (comboReport.getSelectionModel().getSelectedItem() == "Month-Type Report") {
+            MonthTypeView view = new MonthTypeView();
+            reportContent.getChildren().clear();
+            reportContent.getChildren().add(view.get());
+        } else if (comboReport.getSelectionModel().getSelectedItem() == "Contact Schedule") {
+            reportContent.getChildren().clear();
+            ContactScheduleView view = new ContactScheduleView();
+            reportContent.getChildren().add(view.get());
+        } else if (comboReport.getSelectionModel().getSelectedItem() == "Contact Hours") {
+            reportContent.getChildren().clear();
+            ContactHoursView view = new ContactHoursView();
+            reportContent.getChildren().add(view.get());
         }
+    }
+
+    void test() {
+        System.out.println("Test");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> reportList = FXCollections.observableArrayList(
-                "MonthTypeReport","ContactSchedule","Additional");
+                "Month-Type Report","Contact Schedule","Contact Hours");
         comboReport.setItems(reportList);
 
     }
