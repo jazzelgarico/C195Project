@@ -9,23 +9,14 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    @FXML
-    private CustomerController tabCustomerController;
-
-    @FXML
-    private AppointmentController tabAppointmentController;
-
-    @FXML
-    private ReportController tabReportController;
-
-    @FXML
-    private Tab tabCustomer;
-
-    @FXML
-    private Tab tabAppointment;
-
-    @FXML
-    private Tab tabReports;
+    // Controllers
+    @FXML private CustomerController tabCustomerController;
+    @FXML private AppointmentController tabAppointmentController;
+    @FXML private ReportController tabReportController;
+    // Tabs
+    @FXML private Tab tabCustomer;
+    @FXML private Tab tabAppointment;
+    @FXML private Tab tabReports;
 
     /**
      * On initialize, updates Customer TableView, Appointment TableView, and country combo box
@@ -36,8 +27,14 @@ public class MainController implements Initializable {
         DBAppointment.checkUpcoming();
         tabAppointment.setOnSelectionChanged(e -> {
             if (tabAppointment.isSelected()) {
+                //This Works
                 tabAppointmentController.updateAppointmentTable(); }
         });
+        tabReports.setOnSelectionChanged(e -> {
+            if (tabReports.isSelected()) {
+            }
+        });
+
     }
 
 }
