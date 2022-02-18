@@ -9,6 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains static methods to access the database and update models.
+ */
 public class DBAccess {
 
     /**
@@ -37,7 +40,7 @@ public class DBAccess {
 
     /**
      * Gets an ObservableList of Countries from the database. Queries the database for Country_ID and Country in the
-     * coutnries table.
+     * countries table.
      *
      * @return an ObservableList containing Country_ID and Country from countries table in the database
      */
