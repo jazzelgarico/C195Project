@@ -31,102 +31,46 @@ public class AppointmentController implements Initializable {
             localTimeListView -> new TimeFormatCell();
 
     // Month/Week Toggle
-    @FXML
-    private ToggleGroup viewType;
-
-    @FXML
-    private RadioButton radioBtnMonth;
-
-    @FXML
-    private RadioButton radioBtnWeek;
+    @FXML private ToggleGroup viewType;
+    @FXML private RadioButton radioBtnMonth;
+    @FXML private RadioButton radioBtnWeek;
 
     // Appointment Tab Buttons
-    @FXML
-    private Button btnDeleteAppointment;
-
-    @FXML
-    private Button btnEditAppointment;
-
-    @FXML
-    private Button btnSaveAppointment;
-
-    @FXML
-    private Button btnClearAppointment;
+    @FXML private Button btnDeleteAppointment;
+    @FXML private Button btnEditAppointment;
+    @FXML private Button btnSaveAppointment;
+    @FXML private Button btnClearAppointment;
 
     // TableView Appointment
-    @FXML
-    private TableView<Appointment> tblViewAppointment;
-
-    @FXML
-    private TableColumn<Appointment, Integer> colAppID;
-
-    @FXML
-    private TableColumn<Appointment, String> colTitle;
-
-    @FXML
-    private TableColumn<Appointment, String> colDesc;
-
-    @FXML
-    private TableColumn<Appointment, String> colLocation;
-
-    @FXML
-    private TableColumn<Appointment, Integer> colContact;
-
-    @FXML
-    private TableColumn<Appointment, String> colType;
-
-    @FXML
-    private TableColumn<Appointment, LocalDate> colDate;
-
-    @FXML
-    private TableColumn<Appointment, LocalDateTime> colStart;
-
-    @FXML
-    private TableColumn<Appointment, LocalDateTime> colEnd;
-
-    @FXML
-    private TableColumn<Appointment, Integer> colCustomerId;
-
-    @FXML
-    private TableColumn<Appointment, Integer> colUserId;
+    @FXML private TableView<Appointment> tblViewAppointment;
+    @FXML private TableColumn<Appointment, Integer> colAppID;
+    @FXML private TableColumn<Appointment, String> colTitle;
+    @FXML private TableColumn<Appointment, String> colDesc;
+    @FXML private TableColumn<Appointment, String> colLocation;
+    @FXML private TableColumn<Appointment, Integer> colContact;
+    @FXML private TableColumn<Appointment, String> colType;
+    @FXML private TableColumn<Appointment, LocalDate> colDate;
+    @FXML private TableColumn<Appointment, LocalDateTime> colStart;
+    @FXML private TableColumn<Appointment, LocalDateTime> colEnd;
+    @FXML private TableColumn<Appointment, Integer> colCustomerId;
+    @FXML private TableColumn<Appointment, Integer> colUserId;
 
     // Appointment Form
-    @FXML
-    private ComboBox<Contact> comboContact;
-
-    @FXML
-    private DatePicker datePicker;
-
-    @FXML
-    private ComboBox<LocalDateTime> comboEndTime;
-
-    @FXML
-    private ComboBox<LocalDateTime> comboStartTime;
-
-    @FXML
-    private TextField txtFldType;
-
-    @FXML
-    private TextField txtFldAppID;
-
-    @FXML
-    private TextField txtFldDesc;
-
-    @FXML
-    private TextField txtFldLocation;
-
-    @FXML
-    private TextField txtFldTitle;
-
-    @FXML
-    private TextField txtFldCustomerIDApp;
-
-    @FXML
-    private TextField txtFldUserID;
-
+    @FXML private ComboBox<Contact> comboContact;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<LocalDateTime> comboEndTime;
+    @FXML private ComboBox<LocalDateTime> comboStartTime;
+    @FXML private TextField txtFldType;
+    @FXML private TextField txtFldAppID;
+    @FXML private TextField txtFldDesc;
+    @FXML private TextField txtFldLocation;
+    @FXML private TextField txtFldTitle;
+    @FXML private TextField txtFldCustomerIDApp;
+    @FXML private TextField txtFldUserID;
 
     /**
-     * Updates Appointments Table View from Appointments in the database.
+     * Updates Appointments Table View from viewMonth or viewWeek. When radioBtnMonth is selected, shows viewMonth.
+     * When radioBtnWeek is selected, shows viewWeek
      */
     public void updateAppointmentTable() {
         if (radioBtnMonth.isSelected()){
@@ -136,6 +80,11 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Updates tblViewAppointment given an ObservableList of Appointments.
+     *
+     * @param list the list which tblViewAppointment should display
+     */
     public void updateAppointmentTable(ObservableList<Appointment> list) {
         Callback<TableColumn<Appointment,LocalDate>,TableCell<Appointment,LocalDate>> dateFactory =
                 localDateTimeTableColumn -> new TableCell<Appointment,LocalDate>() {
@@ -182,6 +131,10 @@ public class AppointmentController implements Initializable {
         colStart.setCellFactory(timeFactory);
     }
 
+    /**
+     * Updates tblViewAppointment with appointments in AppointmentList that start in the current month.
+     *
+     */
     public void viewMonth() {
         Month thisMonth = LocalDateTime.now().getMonth();
         int thisYear = LocalDateTime.now().getYear();
@@ -191,6 +144,10 @@ public class AppointmentController implements Initializable {
                 .collect(Collectors.toCollection(FXCollections::observableArrayList)));
     }
 
+    /**
+     * Updates tblViewAppointment with appointments in AppointmentList that start in the current week.
+     *
+     */
     public void viewWeek() {
         LocalDateTime weekEnd = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
         LocalDateTime weekStart = weekEnd.minusDays(6);
@@ -200,8 +157,12 @@ public class AppointmentController implements Initializable {
                 .collect(Collectors.toCollection(FXCollections::observableArrayList)));
     }
 
-    @FXML
-    void onActionDeleteAppointment(ActionEvent event) {
+    /**
+     * Deletes the selected appointment from tblViewAppointment. Updates tblViewAppointment after deletio n.
+     *
+      * @param event the event which triggers an appointment to be deleted
+     */
+    @FXML void onActionDeleteAppointment(ActionEvent event) {
         Appointment appointment = tblViewAppointment.getSelectionModel().getSelectedItem();
         DBAppointment.delete(appointment);
         updateAppointmentTable();
@@ -212,8 +173,7 @@ public class AppointmentController implements Initializable {
      *
      * @param event the event which triggers appointment to be edited
      */
-    @FXML
-    void onActionEditAppointment(ActionEvent event) {
+    @FXML void onActionEditAppointment(ActionEvent event) {
         if (tblViewAppointment.getSelectionModel().isEmpty()) {
             // Warn user if no appointment is selected
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -237,8 +197,13 @@ public class AppointmentController implements Initializable {
         }
     }
 
-    @FXML
-    void onActionSaveAppointment(ActionEvent event) {
+    /**
+     * Creates an appointment from Appointment Form text fields if txtFldAppID is empty or updates appointment with the id
+     * specified in txtFldAppId if txtFldAppID is not empty.
+     *
+     * @param event the event which triggers an appointment to be saved
+     */
+    @FXML void onActionSaveAppointment(ActionEvent event) {
         String title = txtFldTitle.getText();
         String desc = txtFldDesc.getText();
         String location = txtFldLocation.getText();
@@ -264,13 +229,12 @@ public class AppointmentController implements Initializable {
         updateAppointmentTable();
     }
 
-    @FXML
-    void onActionClearAppointment(ActionEvent event) {
-        clearAppointmentForm();
-    }
-
-    @FXML
-    public void clearAppointmentForm(){
+    /**
+     * Clears the text fields and sets combo boxes to null associated with the Appointment Form.
+     *
+     * @param event the event which triggers the Appointment Form Fields to be cleared
+     */
+    @FXML void onActionClearAppointment(ActionEvent event) {
         txtFldAppID.clear();
         txtFldTitle.clear();
         txtFldDesc.clear();
@@ -284,8 +248,15 @@ public class AppointmentController implements Initializable {
         txtFldUserID.clear();
     }
 
-    @FXML
-    void onActionDatePicker(ActionEvent event) {
+    /**
+     * Sets the items for comboStartTime and comboEndTime according the date picked. comboStartTime's items start at
+     * the time the business is open and continues with an option every 15 minutes after until 15 minutes before closing.
+     * comboEndTime's items start at 15 minutes after business open and continues with an option every 15 minutes until
+     * closing.
+     *
+     * @param event the event which triggers datePicker value to change
+     */
+    @FXML void onActionDatePicker(ActionEvent event) {
         if (datePicker.getValue() != null) {
             LocalDate ld = datePicker.getValue();
             LocalDateTime localStart = TimeHelper.getTimeOpen(ld);
@@ -307,18 +278,31 @@ public class AppointmentController implements Initializable {
         }
     }
 
-    @FXML
-    void onActionMonthRadio(ActionEvent event) {
+    /**
+     * Calls viewMonth when the event is triggered
+     *
+     * @param event the event which triggers viewMonth to be shown
+     */
+    @FXML void onActionMonthRadio(ActionEvent event) {
         viewMonth();
     }
 
-    @FXML
-    void onActionWeekRadio(ActionEvent event) {
+    /**
+     * Calls viewMonth when the event is triggered
+     *
+     * @param event the event which triggers viewMonth to be shown
+     */
+    @FXML void onActionWeekRadio(ActionEvent event) {
         viewWeek();
     }
 
-    @FXML
-    void onActionStartTime(ActionEvent event) {
+    /**
+     * Sets comboEndTime's items to start from 15 minutes after the selected item from comboStartTime and continues
+     * every 15 minutes until business closing time.
+     *
+     * @param event
+     */
+    @FXML void onActionStartTime(ActionEvent event) {
         if (comboStartTime.getValue() != null) {
             final LocalDate APPOINTMENT_DATE = datePicker.getValue();
             final LocalDateTime CLOSE_TIME = TimeHelper.getTimeClose(APPOINTMENT_DATE);
@@ -335,6 +319,11 @@ public class AppointmentController implements Initializable {
         }
     }
 
+    /**
+     * Sets ContactList, adds the database's appointment table to the AppointmentList, updates the
+     * appointment table, and sets the items in comboContact according to ContactList
+     *
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ContactList.set();
