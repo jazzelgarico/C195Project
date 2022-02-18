@@ -265,23 +265,19 @@ public class AppointmentController implements Initializable {
 
     /**
      * Checks if AppointmentForm is completed. Returns false if any text field is empty, if any text field only contains
-     * spaces, or if any combo box is null.
+     * white space, or if any combo box is null.
      *
      * @return true if the form is completed, false if the form is not completed
      */
     boolean isFormCompleted() {
-        boolean anyTextFieldEmpty = txtFldTitle.getText() == "" || txtFldDesc.getText() == "" ||
-                txtFldLocation.getText() == "" || txtFldType.getText() == "" || txtFldCustomerIDApp.getText() == "" ||
-                txtFldUserID.getText() == "";
-
-        boolean anyTextFieldSpaceOnly = txtFldTitle.getText().trim() == "" || txtFldDesc.getText().trim() == "" ||
+        boolean anyTextFieldEmpty = txtFldTitle.getText().trim() == "" || txtFldDesc.getText().trim() == "" ||
                 txtFldLocation.getText().trim() == "" || txtFldType.getText().trim() == "" ||
                 txtFldCustomerIDApp.getText().trim() == "" || txtFldUserID.getText().trim() == "";
 
         boolean anyComboBoxNull = comboContact.getValue() == null ||  datePicker.getValue() == null ||
                 comboStartTime.getValue() == null || comboEndTime.getValue() == null;
 
-        return !(anyTextFieldEmpty || anyComboBoxNull || anyTextFieldSpaceOnly);
+        return !(anyTextFieldEmpty || anyComboBoxNull);
     }
 
     /**
