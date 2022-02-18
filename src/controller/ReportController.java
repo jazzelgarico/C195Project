@@ -18,24 +18,23 @@ import view.MonthTypeView;
 
 public class ReportController implements Initializable {
 
-    @FXML
-    private VBox vbox;
+    @FXML private VBox vbox;
+    @FXML private VBox reportContent;
+    @FXML private ComboBox comboReport;
 
-    @FXML
-    private VBox reportContent;
-
-    @FXML
-    private Label test;
-
-    @FXML
-    private ComboBox comboReport;
-
-
+    /**
+     * Updates reportContent when event is triggered
+     *
+     * @param event the event which triggers reportContent to be updated
+     */
     @FXML
     void onActionComboReport(ActionEvent event){
         updateReportContent();
     }
 
+    /**
+     * Updates reportContent according to comboReport selection.
+     */
     void updateReportContent() {
         if (comboReport.getSelectionModel().getSelectedItem() == "Month-Type Report") {
             MonthTypeView view = new MonthTypeView();
@@ -56,6 +55,10 @@ public class ReportController implements Initializable {
         System.out.println("Test");
     }
 
+    /**
+     * Sets the items in comboReport.
+     *
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> reportList = FXCollections.observableArrayList(
