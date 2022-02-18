@@ -39,8 +39,7 @@ public class LoginController implements Initializable{
      *
      * @param event which triggers login attempt
      */
-    @FXML
-    public void btnLoginOnClick(ActionEvent event) {
+    @FXML public void btnLoginOnClick(ActionEvent event) {
         //Get Login Credentials
         final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
 
@@ -82,6 +81,10 @@ public class LoginController implements Initializable{
         }
     }
 
+    /**
+     * Sets texts for lblUserName, lblPassword, btnLogin, and lblRegion
+     *
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         lblUserName.setText(rb.getString("Username"));
