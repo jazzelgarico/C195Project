@@ -9,11 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class DBAccess {
 
     /**
-     * Validates login credentials given by the user.
+     * Validates login credentials given by the user. Queries the database for all users and checks if the username
+     * and password combination provided is in the query.
      *
      * @param username the username provided
      * @param password the password provided
@@ -35,7 +35,12 @@ public class DBAccess {
         return isLoginValid;
     }
 
-
+    /**
+     * Gets an ObservableList of Countries from the database. Queries the database for Country_ID and Country in the
+     * coutnries table.
+     *
+     * @return an ObservableList containing Country_ID and Country from countries table in the database
+     */
     public static ObservableList<Country> getCountries() {
         ObservableList<Country> list = FXCollections.observableArrayList();
         try {
@@ -53,6 +58,13 @@ public class DBAccess {
         return list;
     }
 
+    /**
+     * Gets a list of all first-level divisions associated with the countryId given. Queries the first_level_divisions
+     * table in the database for Division_ID and Division where the Country_ID matches the countryId given.
+     *
+     * @param countryId the countryId for which first-level divisions need to be found
+     * @return an ObservableList of all first-level divisions associated with the countryId
+     */
     public static ObservableList<FirstLevelDivision> getFirstLevelDivision(int countryId) {
         ObservableList<FirstLevelDivision> list = FXCollections.observableArrayList();
         try {
@@ -70,6 +82,13 @@ public class DBAccess {
         return list;
     }
 
+    /**
+     * Gets the FirstLevelDivision with the divisionId. Queries the first_level_divisions table from the database for
+     * Division and Country_ID where the Division_ID matches the given divisionId
+     *
+     * @param divisionId the divisionId of the FirstLevelDivision to get
+     * @return the FirstLevelDivision with the divisionID
+     */
     public static FirstLevelDivision getFirstLevelDivisionByID(int divisionId) {
         FirstLevelDivision division = new FirstLevelDivision();
         try {
@@ -86,14 +105,20 @@ public class DBAccess {
         return division;
     }
 
-    public static Country getCountryByID(int countryID) {
+    /**
+     * Returns a Country with the given countryId. Queries the countries table of the database for the Country where
+     * the Country_ID matches the given countryId
+     *
+     * @param countryId the countryId of the Country to get
+     * @return the Country with the matching countryId
+     */
+    public static Country getCountryByID(int countryId) {
         Country country = new Country();
         try {
-            String query = "SELECT Country,Country_ID FROM countries WHERE Country_ID="+countryID+";";
+            String query = "SELECT Country FROM countries WHERE Country_ID="+countryId+";";
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            int countryId = rs.getInt("Country_ID");
             String name = rs.getString("Country");
 
             country = new Country(countryId,name);
