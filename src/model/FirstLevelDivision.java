@@ -85,7 +85,7 @@ public class FirstLevelDivision {
     }
 
     /**
-     * Returns the division name.
+     * Override of toString: returns the division name.
      *
      * @return
      */
