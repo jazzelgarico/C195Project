@@ -2,6 +2,7 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -22,12 +23,27 @@ public class AppointmentList {
     }
 
     public static void replace(Appointment appointment){
-        Optional<Appointment> oldAppointment = list.stream()
-                .filter(a -> a.getAppointmentId() == appointment.getAppointmentId())
-                .findAny();
-        if (oldAppointment.isEmpty()) {
+        Appointment original = getById(appointment.getAppointmentId());
+        if (original != null) {
+            list.set(list.indexOf(original),appointment);
+            MonthTypeReport.edit(original,appointment);
+            ContactHoursReport.edit(original,appointment);
+
         } else {
-            list.set(list.indexOf(oldAppointment.get()),appointment);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Edit Message");
+            alert.setHeaderText("Appointment cannot be edited.");
+            alert.setContentText("The appointment you are trying to edit doesn't exist.");
+            alert.showAndWait();
+        }
+
+    }
+    public static Appointment getById(int id) {
+        Optional<Appointment> appointment = list.stream().filter(a -> a.getAppointmentId() == id).findAny();
+        if(appointment.isPresent()){
+            return appointment.get();
+        } else{
+            return null;
         }
     }
 
