@@ -22,14 +22,11 @@ public class CustomerList {
     }
 
     public static void replace(Customer customer){
-        System.out.println("Customer ID to edit: " + customer.getCustomerId());
         Optional<Customer> oldCustomer = list.stream()
                 .filter(c -> c.getCustomerId() == customer.getCustomerId())
                         .findAny();
         if (oldCustomer.isEmpty()) {
         } else {
-            System.out.println(oldCustomer.get());
-            System.out.println(list.indexOf(oldCustomer.get()));
             list.set(list.indexOf(oldCustomer.get()),customer);
         }
     }
