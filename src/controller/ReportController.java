@@ -8,8 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.scene.control.TableView;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 import view.ContactHoursView;
 import view.ContactScheduleView;
@@ -21,7 +20,9 @@ import view.MonthTypeView;
 public class ReportController implements Initializable {
 
     @FXML private VBox reportContent;
-    @FXML private ComboBox comboReport;
+    @FXML private ComboBox<String> comboReport;
+    @FXML private Tab tabReports;
+    @FXML private VBox vbox;
 
     private static final ObservableList<String> REPORT_LIST = FXCollections.observableArrayList(
             "Month-Type Report","Contact Schedule Report","Contact Hours Report");
@@ -36,7 +37,7 @@ public class ReportController implements Initializable {
     }
 
     /**
-     * Updates reportContent when event is triggered
+     * Updates reportContent on change in comboReport value
      *
      * @param event the event which triggers reportContent to be updated
      */
@@ -46,28 +47,32 @@ public class ReportController implements Initializable {
     }
 
     /**
+     * Updates reportContent on Refresh button interaction
+     *
+     * @param event the event which triggers reportContent to be updated
+     */
+    @FXML
+    void onActionRefreshReport (ActionEvent event) {
+        updateReportContent();
+    }
+
+    /**
      * Updates reportContent according to comboReport selection.
      */
     void updateReportContent() {
-/*
         if (comboReport.getValue() == "Month-Type Report") {
             MonthTypeView view = new MonthTypeView();
             reportContent.getChildren().clear();
-            reportContent.getChildren().add(view.get());
+            reportContent.getChildren().add(view);
         } else if (comboReport.getValue() == "Contact Schedule Report") {
             reportContent.getChildren().clear();
             ContactScheduleView view = new ContactScheduleView();
-            reportContent.getChildren().add(view.get());
+            reportContent.getChildren().add(view);
         } else if (comboReport.getValue() == "Contact Hours Report") {
             reportContent.getChildren().clear();
             ContactHoursView view = new ContactHoursView();
-            reportContent.getChildren().add(view.get());
-        }*/
+            reportContent.getChildren().add(view);
+        }
     }
 
-
-
-    void test() {
-        System.out.println("Test");
-    }
 }
