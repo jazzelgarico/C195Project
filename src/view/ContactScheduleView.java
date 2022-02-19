@@ -17,12 +17,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
-public class ContactScheduleView {
-
-    private VBox vbox;
+public class ContactScheduleView extends VBox{
 
     public ContactScheduleView() {
-        vbox = new VBox();
         for (Contact c : ContactList.get()) {
             Label label = new Label(c.getContactName());
 
@@ -88,14 +85,11 @@ public class ContactScheduleView {
             colStart.setCellFactory(timeFactory);
             scheduleView.setMaxHeight((scheduleView.getItems().size() * 25) + 25);
             scheduleView.setPlaceholder(new Label("No appointments found."));
-            vbox.getChildren().add(label);
-            vbox.getChildren().add(scheduleView);
-            vbox.setSpacing(10);
+            this.getChildren().add(label);
+            this.getChildren().add(scheduleView);
+            this.setSpacing(10);
         }
     }
-    public VBox get() {
-            return vbox;
-        }
 
 
 }
