@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import view.ContactHoursView;
 import view.ContactScheduleView;
@@ -18,9 +20,20 @@ import view.MonthTypeView;
  */
 public class ReportController implements Initializable {
 
-    @FXML private VBox vbox;
     @FXML private VBox reportContent;
     @FXML private ComboBox comboReport;
+
+    private static final ObservableList<String> REPORT_LIST = FXCollections.observableArrayList(
+            "Month-Type Report","Contact Schedule Report","Contact Hours Report");
+
+    /**
+     * Sets the items in comboReport.
+     *
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        comboReport.setItems(REPORT_LIST);
+    }
 
     /**
      * Updates reportContent when event is triggered
@@ -36,35 +49,25 @@ public class ReportController implements Initializable {
      * Updates reportContent according to comboReport selection.
      */
     void updateReportContent() {
-        if (comboReport.getSelectionModel().getSelectedItem() == "Month-Type Report") {
+/*
+        if (comboReport.getValue() == "Month-Type Report") {
             MonthTypeView view = new MonthTypeView();
             reportContent.getChildren().clear();
             reportContent.getChildren().add(view.get());
-        } else if (comboReport.getSelectionModel().getSelectedItem() == "Contact Schedule") {
+        } else if (comboReport.getValue() == "Contact Schedule Report") {
             reportContent.getChildren().clear();
             ContactScheduleView view = new ContactScheduleView();
             reportContent.getChildren().add(view.get());
-        } else if (comboReport.getSelectionModel().getSelectedItem() == "Contact Hours") {
+        } else if (comboReport.getValue() == "Contact Hours Report") {
             reportContent.getChildren().clear();
             ContactHoursView view = new ContactHoursView();
             reportContent.getChildren().add(view.get());
-        }
+        }*/
     }
+
+
 
     void test() {
         System.out.println("Test");
     }
-
-    /**
-     * Sets the items in comboReport.
-     *
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<String> reportList = FXCollections.observableArrayList(
-                "Month-Type Report","Contact Schedule","Contact Hours");
-        comboReport.setItems(reportList);
-
-    }
-
 }

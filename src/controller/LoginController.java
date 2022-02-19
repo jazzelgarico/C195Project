@@ -57,7 +57,7 @@ public class LoginController implements Initializable{
             e.printStackTrace();
         }
         LOGGER.addHandler(fileHandler);
-        String logMessage = " login attempt by user " + username + "at " +
+        String logMessage = " login attempt by user " + username + " at " +
                 TimeHelper.clientToServerTime(LocalDateTime.now()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) +
                 "UTC";
 

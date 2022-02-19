@@ -2,10 +2,15 @@ package controller;
 
 import dbaccess.DBAppointment;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.stage.Stage;
 
 /**
  * Controller for main-view
@@ -30,13 +35,14 @@ public class MainController implements Initializable {
         DBAppointment.checkUpcoming();
         tabAppointment.setOnSelectionChanged(e -> {
             if (tabAppointment.isSelected()) {
-                //This Works
                 tabAppointmentController.updateAppointmentTable(); }
-        });
+            });
         tabReports.setOnSelectionChanged(e -> {
             if (tabReports.isSelected()) {
+                tabReportController.test();
             }
         });
+
 
     }
 

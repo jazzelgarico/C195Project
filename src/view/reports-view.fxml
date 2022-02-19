@@ -6,8 +6,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 
-<Tab text="Reports" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabReports" fx:controller="controller.ReportController">
-    <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" fx:id="vbox">
+<Tab xmlns="http://javafx.com/javafx/17" fx:id="tabReports" text="Reports" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReportController">
+    <VBox spacing="10.0" fx:id="vbox">
         <children>
             <ComboBox fx:id="comboReport" onAction="#onActionComboReport" prefWidth="150.0" />
             <VBox fx:id="reportContent"></VBox>
