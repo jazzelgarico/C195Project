@@ -149,7 +149,10 @@ public class AppointmentController implements Initializable {
 
     /**
      * Updates tblViewAppointment with appointments in AppointmentList that start in the current month.
-     *
+     * <p>
+     * Lambda expression used in this method for increased legibility. THe expression filters AppointmentList for
+     * appointments that are in the current month instead of using for loop to add appointments to a new
+     * ObservableList<Appointment>.
      */
     public void viewMonth() {
         Month thisMonth = LocalDateTime.now().getMonth();
@@ -161,9 +164,11 @@ public class AppointmentController implements Initializable {
     }
 
     /**
-     * Updates tblViewAppointment with appointments in AppointmentList that start in the current week. The current week
-     * starts on a Sunday and ends on a Saturday.
-     *
+     * Updates tblViewAppointment with appointments in AppointmentList that start in the current week.
+     * <p>
+     * Lambda expression used in this method for increased legibility. THe expression filters AppointmentList for
+     * appointments that are in the current week instead of using for loop to add appointments to a new
+     * ObservableList<Appointment>.
      */
     public void viewWeek() {
         LocalDateTime weekEnd = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
