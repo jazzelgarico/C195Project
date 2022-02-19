@@ -7,11 +7,17 @@ import model.MonthTypeCount;
 import model.MonthTypeReport;
 import java.time.Month;
 
+/**
+ * A TableView which displays the MonthTypeView.
+ */
 public class MonthTypeView extends TableView<MonthTypeCount> {
     private TableColumn<MonthTypeCount,String> colType;
     private TableColumn<MonthTypeCount,Month> colMonth;
     private TableColumn<MonthTypeCount,Integer> colCount;
 
+    /**
+     * No-arg Constructor which builds a MonthTypeView.
+     */
     public MonthTypeView() {
         colType = new TableColumn();
         colMonth = new TableColumn();

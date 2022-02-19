@@ -17,8 +17,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
+/**
+ * A Vbox which displays a TableView showing the schedule for each contact.
+ */
 public class ContactScheduleView extends VBox{
 
+    /**
+     * No-arg Constructor which builds a ContactScheduleView.
+     */
     public ContactScheduleView() {
         for (Contact c : ContactList.get()) {
             Label label = new Label(c.getContactName());
@@ -90,6 +96,5 @@ public class ContactScheduleView extends VBox{
             this.setSpacing(10);
         }
     }
-
 
 }

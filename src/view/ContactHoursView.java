@@ -6,16 +6,21 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import model.*;
-
 import java.time.Duration;
 import java.time.Month;
 import java.util.Formatter;
 
+/**
+ * The TableView which displays ContactHoursView.
+ */
 public class ContactHoursView extends TableView<ContactHours>{
     private TableColumn<ContactHours,Contact> colContact;
     private TableColumn<ContactHours,Month> colMonth;
     private TableColumn<ContactHours,Duration> colHours;
 
+    /**
+     * No-arg constructor which builds a ContactHoursView.
+     */
     public ContactHoursView() {
         colContact = new TableColumn();
         colMonth = new TableColumn();
@@ -49,8 +54,6 @@ public class ContactHoursView extends TableView<ContactHours>{
         colMonth.setCellValueFactory(new PropertyValueFactory("Month"));
         colHours.setCellValueFactory(new PropertyValueFactory("TotalHours"));
         colHours.setCellFactory(durationFactory);
-
     }
-
 
 }
