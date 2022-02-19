@@ -11,26 +11,24 @@ import java.time.Duration;
 import java.time.Month;
 import java.util.Formatter;
 
-public class ContactHoursView {
-    private TableView<ContactHours> contactHoursView;
+public class ContactHoursView extends TableView<ContactHours>{
     private TableColumn<ContactHours,Contact> colContact;
     private TableColumn<ContactHours,Month> colMonth;
     private TableColumn<ContactHours,Duration> colHours;
 
     public ContactHoursView() {
-        contactHoursView = new TableView();
         colContact = new TableColumn();
         colMonth = new TableColumn();
         colHours = new TableColumn();
-        contactHoursView.getColumns().add(colContact);
-        contactHoursView.getColumns().add(colMonth);
-        contactHoursView.getColumns().add(colHours);
+        this.getColumns().add(colContact);
+        this.getColumns().add(colMonth);
+        this.getColumns().add(colHours);
         colContact.setText("Contact");
         colMonth.setText("Month");
         colHours.setText("Total Hours");
 
-        contactHoursView.setItems(ContactHoursReport.get());
-        contactHoursView.setMaxHeight((contactHoursView.getItems().size() * 25) +25);
+        this.setItems(ContactHoursReport.get());
+        this.setMaxHeight((this.getItems().size() * 25) +25);
 
         Callback<TableColumn<ContactHours, Duration>, TableCell<ContactHours, Duration>> durationFactory =
                 localDateTimeTableColumn -> new TableCell<ContactHours, Duration>() {
@@ -52,10 +50,6 @@ public class ContactHoursView {
         colHours.setCellValueFactory(new PropertyValueFactory("TotalHours"));
         colHours.setCellFactory(durationFactory);
 
-    }
-
-    public TableView<ContactHours> get() {
-        return contactHoursView;
     }
 
 
