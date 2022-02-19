@@ -72,6 +72,19 @@ public class AppointmentController implements Initializable {
     @FXML private TextField txtFldUserID;
 
     /**
+     * Sets ContactList, adds the database's appointment table to the AppointmentList, updates the appointment table,
+     * and sets the items in comboContact according to ContactList.
+     *
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ContactList.set();
+        DBAppointment.addAll();
+        updateAppointmentTable();
+        comboContact.setItems(ContactList.get());
+    }
+
+    /**
      * Updates Appointments Table View from viewMonth or viewWeek. When radioBtnMonth is selected, shows viewMonth.
      * When radioBtnWeek is selected, shows viewWeek
      */
@@ -358,17 +371,6 @@ public class AppointmentController implements Initializable {
         }
     }
 
-    /**
-     * Sets ContactList, adds the database's appointment table to the AppointmentList, updates the appointment table,
-     * and sets the items in comboContact according to ContactList.
-     *
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ContactList.set();
-        DBAppointment.addAll();
-        updateAppointmentTable();
-        comboContact.setItems(ContactList.get());
-    }
+
 
 }
