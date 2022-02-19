@@ -1,8 +1,7 @@
 package model;
 
 /**
- *
- * @author Jazzme Nadine N. Elgarico
+ * Models the customer
  */
 
 public class Customer {
