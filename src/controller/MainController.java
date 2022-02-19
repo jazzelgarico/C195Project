@@ -28,7 +28,8 @@ public class MainController implements Initializable {
 
     /**
      * On initialize, updates Customer TableView, Appointment TableView, and country combo box
-     *
+     * <p>
+     * Lambda expression used to implement EventHandler interface.
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
