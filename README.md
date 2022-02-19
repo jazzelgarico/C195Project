@@ -17,6 +17,7 @@ V1 2/19/2022
 * **IDE:** IntelliJ IDEA 2021.3.2 (Community Edition)
 * **JDK:** Java SE 17.0.2
 * **JavaFX version:** JavaFX-SDK-17.0.1
+* **MySQL Connector Driver:** mysql-connector-java-8.0.25
 ## How to Run
 
 ## Author
