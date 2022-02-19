@@ -1,16 +1,28 @@
 package dbaccess;
 
 import dbconnection.DBConnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import model.Appointment;
+import model.AppointmentList;
 import model.Customer;
 import model.CustomerList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.stream.Collectors;
 
+/**
+ * Contains static methods to access the database customer table and update the Customer and CustomerList model.
+ */
 public class DBCustomer {
-
+    /**
+     * Adds all the Customers from the database's customers table into CustomerList. Queries the customers table for
+     * the Customer_ID, Customer_Name, Address, Postal_Code, Phone, and Division_ID columns, creates a new Customer
+     * for each row, and then adds that Customer to CustomerList.
+     */
     public static void addAll() {
         try {
             String query = "SELECT Customer_ID,Customer_Name,Address,Postal_Code,Phone,Division_ID FROM customers";
@@ -32,6 +44,12 @@ public class DBCustomer {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Adds the provided customer to the ContactList and inserts it into the customer table of the database. Performs
+     * an update query to the customers table which inserts a new row containing the provided customer's information.
+     *
+     * @param customer the customer to be added to ContactList and inserted to the database
+     */
     public static void add(Customer customer) {
         String name = customer.getCustomerName();
         String address = customer.getAddress();
@@ -56,6 +74,12 @@ public class DBCustomer {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Edits the provided customer in the CustomerList and the customers database. Performs an update query to the
+     * customers table which updates the row with the provided customer's information
+     *
+     * @param customer the customer to be edited
+     */
     public static void edit(Customer customer) {
         int id = customer.getCustomerId();
         String query = "UPDATE customers SET Customer_Name=?, Address=?,Postal_Code=?,Phone=?,Last_Update=NOW(),"
@@ -77,6 +101,16 @@ public class DBCustomer {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
+    /**
+     * Deletes the provided customer in the CustomerList and the customers database.
+     * <p>
+     * Performs a query which deletes rows in the appointments table with the customerId of the provided customer, then
+     * performs a query which deletes the row in the customers table with the customerId of the provided customer. Also
+     * deletes appointments in AppointmentList and customers in CustomerList with the customerId of the provided
+     * customer.
+     *
+     * @param customer the customer to be edited
+     */
     public static void delete(Customer customer) {
         int customerId = customer.getCustomerId();
         int totalDeletedAppointments = 0;
@@ -84,6 +118,13 @@ public class DBCustomer {
             String queryAppointments = "DELETE FROM appointments WHERE Customer_ID=" + customerId + ";";
             PreparedStatement psAppointments = DBConnection.getConnection().prepareStatement(queryAppointments);
             totalDeletedAppointments = psAppointments.executeUpdate();
+
+            ObservableList<Appointment> deleteList = AppointmentList.get().stream()
+                    .filter(a -> a.getCustomerId() == customerId)
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            for (Appointment a: deleteList) {
+                AppointmentList.remove(a);
+            }
 
             String queryCustomers = "DELETE FROM customers WHERE Customer_ID=" + customerId + ";";
             PreparedStatement psCustomers = DBConnection.getConnection().prepareStatement(queryCustomers);
