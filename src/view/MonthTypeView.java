@@ -28,9 +28,10 @@ public class MonthTypeView extends TableView<MonthTypeCount> {
         colType.setText("Type");
         colMonth.setText("Month");
         colCount.setText("Count");
-        this.setMaxWidth(225);
+        this.setMaxWidth(250);
         this.setItems(MonthTypeReport.get());
-        this.setMaxHeight((this.getItems().size() * 25) +25);
+        this.setPrefHeight((this.getItems().size() * 30) + 30);
+        this.setMaxHeight((this.getItems().size() * 30) + 30);
         colType.setCellValueFactory(new PropertyValueFactory("Type"));
         colMonth.setCellValueFactory(new PropertyValueFactory("Month"));
         colCount.setCellValueFactory(new PropertyValueFactory("Count"));
