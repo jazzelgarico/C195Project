@@ -3,6 +3,9 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Models an appointment
+ */
 public class Appointment {
     private int appointmentId;
     private String title;
@@ -273,8 +276,6 @@ public class Appointment {
     public void getUserId(int userId) {
         this.userId = userId;
     }
-
-
 
 }
 

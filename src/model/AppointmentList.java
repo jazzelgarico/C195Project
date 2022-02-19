@@ -6,22 +6,45 @@ import javafx.scene.control.Alert;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Models an appointment list. AppointmentList should match the rows in the appointment table in the database.
+ */
 public class AppointmentList {
 
     private static ObservableList<Appointment> list = FXCollections.observableArrayList();
 
+    /**
+     * Adds the appointment to AppointmentList and updates MonthTypeReport and ContactHoursReport
+     *
+     * @param appointment the appointment to add
+     */
     public static void add(Appointment appointment) {
         list.add(appointment);
         MonthTypeReport.add(appointment);
         ContactHoursReport.add(appointment);
     }
 
+    /**
+     * Removes the appointment from AppointmentList and updates MonthTypeReport and ContactHoursReport
+     *
+     * @param appointment the appointment to remove
+     */
     public static void remove(Appointment appointment) {
         list.remove(appointment);
         MonthTypeReport.remove(appointment);
         ContactHoursReport.remove(appointment);
     }
 
+    /**
+     * Updates the appointment in AppointmentList and updates MonthTypeReport and ContactHoursReport.
+     * <p>
+     * Finds the original appointment in AppointmentList, retrieves its index, and sets the updatedAppointment to that
+     * index.
+     * <p>
+     * Gives an alert if appointment cannot be found.
+     *
+     * @param appointment the appointment to update
+     */
     public static void replace(Appointment appointment){
         Appointment original = getById(appointment.getAppointmentId());
         if (original != null) {
@@ -36,8 +59,14 @@ public class AppointmentList {
             alert.setContentText("The appointment you are trying to edit doesn't exist.");
             alert.showAndWait();
         }
-
     }
+
+    /**
+     * Gets the appointment from AppointmentList with the given id. If no matching appointment is found, returns null.
+     *
+     * @param id the id of the appointment to return
+     * @return the appointment with the matching id
+     */
     public static Appointment getById(int id) {
         Optional<Appointment> appointment = list.stream().filter(a -> a.getAppointmentId() == id).findAny();
         if(appointment.isPresent()){
