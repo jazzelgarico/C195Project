@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Models a country
+ */
 public class Country {
     private int countryId;
     private String country;
@@ -32,6 +35,11 @@ public class Country {
         return countryId;
     }
 
+    /**
+     * Override of toString: returns the country name.
+     *
+     * @return the name of the country
+     */
     @Override
     public String toString() {
         return country;
