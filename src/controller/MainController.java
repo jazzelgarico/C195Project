@@ -37,12 +37,6 @@ public class MainController implements Initializable {
             if (tabAppointment.isSelected()) {
                 tabAppointmentController.updateAppointmentTable(); }
             });
-        tabReports.setOnSelectionChanged(e -> {
-            if (tabReports.isSelected()) {
-                tabReportController.test();
-            }
-        });
-
 
     }
 
