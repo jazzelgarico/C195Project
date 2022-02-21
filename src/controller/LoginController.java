@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Controller for login-view
@@ -52,7 +53,8 @@ public class LoginController implements Initializable{
         final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
         FileHandler fileHandler = null;
         try {
-            fileHandler = new FileHandler(LoginController.class.getSimpleName() + ".log",true);
+            fileHandler = new FileHandler("login_activity.txt",true);
+            fileHandler.setFormatter(new SimpleFormatter());
         } catch (IOException e) {
             e.printStackTrace();
         }
