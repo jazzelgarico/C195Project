@@ -11,12 +11,12 @@ import java.util.TimeZone;
 public class TimeHelper {
     private static final ZoneId SERVER_ZONE_ID = ZoneId.of("UTC");
     private static final ZoneId BUSINESS_ZONE_ID = ZoneId.of("America/New_York");
-    private static final ZoneId CLIENT_ZONE_ID = ZoneId.of(TimeZone.getDefault().getID());
+    private static final ZoneId CLIENT_ZONE_ID = TimeZone.getDefault().toZoneId();
     private static final LocalTime TIME_OPEN = LocalTime.of(8,0);
     private static final LocalTime TIME_CLOSE = LocalTime.of(22,0);
 
     /**
-     * Gets the ZoneId of the client
+     * Gets the ZoneId of the client.
      *
      * @return ZoneId of Client
      */
