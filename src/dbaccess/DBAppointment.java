@@ -37,10 +37,8 @@ public class DBAppointment {
                 String location = rs.getString("Location");
                 int contactId = rs.getInt("Contact_ID");
                 String type = rs.getString("Type");
-                LocalDateTime startTime =
-                        TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
-                LocalDateTime endTime =
-                        TimeHelper.serverToClientTime(rs.getTimestamp("End").toLocalDateTime());
+                LocalDateTime startTime = rs.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime endTime = rs.getTimestamp("End").toLocalDateTime();
                 LocalDate appointmentDate = startTime.toLocalDate();
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
@@ -79,10 +77,8 @@ public class DBAppointment {
                 ps.setString(2, appointment.getDescription());
                 ps.setString(3,appointment.getLocation());
                 ps.setString(4, appointment.getType());
-                ps.setTimestamp(5,
-                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-                ps.setTimestamp(6,
-                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setTimestamp(5, Timestamp.valueOf(appointment.getStartTime()));
+                ps.setTimestamp(6, Timestamp.valueOf(appointment.getEndTime()));
                 ps.setInt(7,appointment.getCustomerId());
                 ps.setInt(8,appointment.getUserId());
                 ps.setInt(9,appointment.getContactId());
@@ -125,10 +121,8 @@ public class DBAppointment {
                 ps.setString(2, appointment.getDescription());
                 ps.setString(3, appointment.getLocation());
                 ps.setString(4, appointment.getType());
-                ps.setTimestamp(5,
-                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getStartTime())));
-                ps.setTimestamp(6,
-                        Timestamp.valueOf(TimeHelper.clientToServerTime(appointment.getEndTime())));
+                ps.setTimestamp(5, Timestamp.valueOf(appointment.getStartTime()));
+                ps.setTimestamp(6, Timestamp.valueOf(appointment.getEndTime()));
                 ps.setInt(7, appointment.getCustomerId());
                 ps.setInt(8, appointment.getUserId());
                 ps.setInt(9, appointment.getContactId());
@@ -186,8 +180,7 @@ public class DBAppointment {
 
             while (rs.next()) {
                 int appointmentId = rs.getInt("Appointment_ID");
-                LocalDateTime start =
-                        TimeHelper.serverToClientTime(rs.getTimestamp("Start").toLocalDateTime());
+                LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
                 String startFormat = start.format(DateTimeFormatter.ofPattern("h:mma"));
                 LocalDate appointmentDate = start.toLocalDate();
                 String dateFormat = appointmentDate.format(DateTimeFormatter.ofPattern("M/d/yyyy"));
