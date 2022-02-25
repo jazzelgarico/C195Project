@@ -4,7 +4,7 @@ Purpose
     A scheduling program which interacts with a database to add, edit, and delete customers, to add, edit, and delete appointments, and to provide reports on the data in the database.
 
     Additional Report: The additional report is called the Contact Hours Report. The report lists the number of hours each contact has scheduled for appointments for each month.
-    Version: V1 2/19/2022
+    Version: V2 2/25/2022
 
 Built With
     IDE: IntelliJ IDEA 2021.3.2 (Community Edition)

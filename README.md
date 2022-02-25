@@ -4,7 +4,7 @@ A scheduling program which interacts with a database to add, edit, and delete cu
 ### Additional Report
 The additional report is called the Contact Hours Report. The report lists the number of hours each contact has scheduled for appointments for each month.
 ## Version
-V1 2/19/2022
+V2 2/25/2022
 ## Built With
 * **IDE:** IntelliJ IDEA 2021.3.2 (Community Edition)
 * **JDK:** Java SE 17.0.2
